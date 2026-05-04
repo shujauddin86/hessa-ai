@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import PhoneShell from "./components/PhoneShell";
 import BottomNav from "./components/BottomNav";
 import SplashScreen from "./screens/SplashScreen";
@@ -38,10 +38,37 @@ const SCREENS = Object.freeze({
  * visibility per route. Behavior of original 6-screen flow is preserved exactly.
  */
 export default function App() {
+  const [authenticated, setAuthenticated] = useState(false);
+const password = "hessa123*";
   const { screen } = useApp();
 
   const Screen = useMemo(() => SCREENS[screen] || SplashScreen, [screen]);
   const showChrome = screen !== "splash";
+  if (!authenticated) {
+  return (
+    <div style={{
+      height: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      background: "black",
+      color: "white",
+      flexDirection: "column"
+    }}>
+      <h2>Enter Access Code</h2>
+      <input
+        type="password"
+        placeholder="Enter password"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && e.target.value === password) {
+            setAuthenticated(true);
+          }
+        }}
+        style={{ padding: "10px", marginTop: "10px" }}
+      />
+    </div>
+  );
+}
 
   return (
     <PhoneShell showStatusBar={showChrome}>
