@@ -39,37 +39,72 @@ const SCREENS = Object.freeze({
  */
 export default function App() {
   const [authenticated, setAuthenticated] = useState(false);
+  const [input, setInput] = useState("");
 const password = "hessa123*";
   const { screen } = useApp();
 
   const Screen = useMemo(() => SCREENS[screen] || SplashScreen, [screen]);
   const showChrome = screen !== "splash";
-  if (!authenticated) {
+if (!authenticated) {
   return (
-    <div style={{
-      height: "100vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      background: "black",
-      color: "white",
-      flexDirection: "column"
-    }}>
-      <h2>Enter Access Code</h2>
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "#000",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 999999
+      }}
+    >
       <input
         type="password"
-        placeholder="Enter password"
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && e.target.value === password) {
+        autoFocus
+        style={{
+          padding: "20px",
+          fontSize: "18px",
+          borderRadius: "10px",
+          border: "1px solid #333",
+          background: "#111",
+          color: "#fff",
+          outline: "none",
+          zIndex: 999999
+        }}
+        onChange={(e) => {
+          if (e.target.value === password) {
             setAuthenticated(true);
           }
         }}
-        style={{ padding: "10px", marginTop: "10px" }}
+      />
+    </div>
+  );
+}    >
+      <input
+        type="password"
+        autoFocus
+        style={{
+          padding: "20px",
+          fontSize: "18px",
+          borderRadius: "10px",
+          border: "1px solid #333",
+          background: "#111",
+          color: "#fff",
+          outline: "none",
+          zIndex: 999999,
+        }}
+        onChange={(e) => {
+          if (e.target.value === password) {
+            setAuthenticated(true);
+          }
+        }}
       />
     </div>
   );
 }
-
   return (
     <PhoneShell showStatusBar={showChrome}>
       <Screen />
