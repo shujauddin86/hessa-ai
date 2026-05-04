@@ -39,20 +39,6 @@ const APP_PASSWORD = "hessa123*";
 // Rendered alone — nothing sits on top of it, no overlay, no pointer issues.
 // ─────────────────────────────────────────────────────────────────────────────
 
-function LockScreen({ onUnlock }) {
-  const [value,  setValue]  = useState("");
-  const [shake,  setShake]  = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (value === APP_PASSWORD) {
-      onUnlock();
-    } else {
-      setShake(true);
-      setValue("");
-      setTimeout(() => setShake(false), 600);
-    }
-  };
 
   return (
     <div style={lock.root}>
@@ -185,11 +171,15 @@ function AppContent() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [unlocked, setUnlocked] = useState(false);
+  const { screen } = useApp();
 
-  if (!unlocked) {
-    return <LockScreen onUnlock={() => setUnlocked(true)} />;
-  }
+  const Screen = useMemo(() => SCREENS[screen] ?? SplashScreen, [screen]);
+  const showNav = screen !== "splash";
 
-  return <AppContent />;
+  return (
+    <PhoneShell>
+      <Screen />
+      {showNav && <BottomNav />}
+    </PhoneShell>
+  );
 }
