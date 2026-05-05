@@ -679,3 +679,32 @@ a { text-decoration: none; color: inherit; }
 
   .footer-copy { display: none; }
 }
+.early-access-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 380px;
+}
+
+.early-access-form input,
+.early-access-form select {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.early-access-form input::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
+.early-access-form select {
+  color: rgba(255,255,255,0.7);
+}
+
+.early-access-form button {
+  margin-top: 10px;
+}
