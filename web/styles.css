@@ -232,11 +232,367 @@ input, select, textarea { font-family: var(--font); }
   justify-content: center;
   overflow: hidden;
   padding: 140px 32px 100px;
-  text-align:center
 }
 
-/* ── Hero Split Layout ─────────────────────────────────────────────────────── */
+/* ── Hero inner grid container ─────────────────────────────────────────────── */
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  max-width: 1080px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
 
+/* Background stays full-bleed behind hero */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+.hero-orb-1 {
+  width: 680px;
+  height: 680px;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(124,58,237,0.16) 0%, transparent 70%);
+  animation: pulseOrb 8s ease-in-out infinite;
+}
+.hero-orb-2 {
+  width: 400px;
+  height: 400px;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-30%);
+  background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+  animation: floatGlowSlow 10s ease-in-out infinite;
+}
+
+/* Hero left column */
+.hero-left {
+  position: relative;
+  z-index: 1;
+  padding-right: 48px;
+}
+.hero-micro {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 24px;
+  padding: 6px 14px;
+  background: rgba(167,139,250,0.08);
+  border: 1px solid rgba(167,139,250,0.18);
+  border-radius: 100px;
+}
+.hero-headline {
+  font-size: clamp(40px, 6vw, 76px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+.hero-sub {
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.7;
+  color: var(--muted);
+  margin-bottom: 44px;
+  max-width: 420px;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Hero right column — phone container */
+.hero-right {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── Hero Phone Mockup ─────────────────────────────────────────────────────── */
+.hero-phone {
+  position: relative;
+  width: 240px;
+  height: 480px;
+  background: linear-gradient(160deg, #1a1a1a 0%, #0d0d0d 100%);
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 40px 80px rgba(0,0,0,0.6),
+    0 0 60px rgba(124,58,237,0.18);
+  overflow: hidden;
+  animation: floatPhone 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.hero-phone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(167,139,250,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Shared phone notch */
+.phone-notch {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 22px;
+  background: #000;
+  border-radius: 100px;
+  z-index: 10;
+}
+
+/* Hero phone screen content */
+.hero-phone .phone-screen {
+  position: absolute;
+  inset: 0;
+  padding: 60px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.phone-header {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent-soft);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+
+.phone-card {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(167,139,250,0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2.4s linear infinite;
+}
+
+.phone-btn {
+  background: var(--grad);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px 16px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.35);
+  flex-shrink: 0;
+}
+
+/* ── iPhoneScroll Section ──────────────────────────────────────────────────── */
+.iphone-scroll {
+  position: relative;
+  height: 300vh;          /* tall sticky scroll */
+}
+
+.scroll-track {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 96px;
+  overflow: hidden;
+  padding: 0 32px;
+}
+
+.scroll-track::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 60% 50%, rgba(124,58,237,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Scroll section text */
+.scroll-text {
+  max-width: 360px;
+  position: relative;
+  z-index: 1;
+}
+.scroll-text h2 {
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+.scroll-text p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* ── Scroll Phone Mockup ───────────────────────────────────────────────────── */
+.scroll-phone-wrap {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* Glow behind scroll phone */
+.scroll-phone-wrap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px;
+  height: 600px;
+  background: radial-gradient(ellipse at center, rgba(124,58,237,0.22) 0%, transparent 65%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: floatGlow 5s ease-in-out infinite;
+  z-index: -1;
+}
+
+.scroll-phone {
+  position: relative;
+  width: 280px;
+  height: 560px;
+  background: linear-gradient(160deg, #1c1c1e 0%, #0d0d0d 100%);
+  border-radius: 46px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 50px 100px rgba(0,0,0,0.7),
+    0 0 80px rgba(124,58,237,0.14);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.scroll-phone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 46px;
+  background: linear-gradient(135deg, rgba(167,139,250,0.05) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Scroll phone screen */
+.scroll-phone .phone-screen {
+  position: absolute;
+  inset: 0;
+  padding: 68px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+}
+
+/* ── Scroll Phone — Dynamic Content (JS-injected) ──────────────────────────── */
+.ps-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.01em;
+  min-height: 20px;
+  transition: opacity 0.3s var(--ease);
+}
+
+.ps-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 100px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.ps-bar {
+  height: 100%;
+  background: var(--grad);
+  border-radius: 100px;
+  transition: width 0.7s var(--ease);
+  box-shadow: 0 0 8px rgba(167,139,250,0.6);
+}
+
+.ps-clip {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  min-height: 60px;
+}
+
+.ps-clip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(167,139,250,0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
+}
+
+.ps-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  padding: 8px 14px;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.22);
+  border-radius: 100px;
+  text-align: center;
+  flex-shrink: 0;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
 
 /* ── Trust Band ────────────────────────────────────────────────────────────── */
 .trust-band {
@@ -487,13 +843,13 @@ input, select, textarea { font-family: var(--font); }
 
 /* ── Responsive — 960px ────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  /* Hero switches to single column */
-  .hero.hero-split {
+  /* Hero inner grid collapses to single column */
+  .hero-content {
     grid-template-columns: 1fr;
-    text-align: center;
-    padding: 120px 32px 80px;
     gap: 64px;
+    text-align: center;
   }
+  .hero { padding: 120px 32px 80px; }
   .hero-left {
     padding-right: 0;
     display: flex;
@@ -528,7 +884,8 @@ input, select, textarea { font-family: var(--font); }
 @media (max-width: 640px) {
   .section-wrap { padding: 0 20px; }
   .nav { padding: 18px 20px; }
-  .hero.hero-split { padding: 100px 20px 60px; gap: 48px; }
+  .hero { padding: 100px 20px 60px; }
+  .hero-content { gap: 48px; }
   .how, .access { padding: 100px 0; }
 
   .hero-headline { font-size: clamp(36px, 10vw, 52px); }
@@ -553,7 +910,7 @@ input, select, textarea { font-family: var(--font); }
 @media (max-width: 400px) {
   .hero-phone { width: 180px; height: 360px; border-radius: 30px; }
   .scroll-phone { width: 210px; height: 420px; border-radius: 36px; }
-  .hero.hero-split { padding: 90px 16px 48px; }
+  .hero { padding: 90px 16px 48px; }
   .form-card { padding: 32px 16px; }
   .nav { padding: 16px; }
 }
