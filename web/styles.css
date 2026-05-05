@@ -18,7 +18,7 @@
   --accent:      #7c3aed;
   --accent-soft: #a78bfa;
   --grad:        linear-gradient(135deg, #7c3aed, #a78bfa);
-  --font:        -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
   --radius-sm:   10px;
   --radius:      16px;
   --radius-lg:   24px;
@@ -228,12 +228,12 @@ input, select, textarea { font-family: var(--font); }
   margin-bottom: 24px;
 }
 .hero-headline {
-  font-size: clamp(36px, 5vw, 60px);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 1.02;
-  color: var(--text);
-  margin-bottom: 24px;
+  font-size: clamp(40px, 4.8vw, 64px);
+  font-weight: 600; /* IMPORTANT */
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  max-width: 900px;
+  margin: 0 auto 24px;
 }
 .hero-sub {
   font-size: clamp(17px, 2.2vw, 20px);
