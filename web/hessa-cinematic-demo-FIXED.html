@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hessa AI — Cinematic Demo Module</title>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║   HESSA AI — CINEMATIC DEMO MODULE                               ║
+  ║   Version: 1.0  |  Namespace: hd-  |  Zero conflicts            ║
+  ║   Paste the <div class="hd-root"> block below your hero.         ║
+  ║   Tested: Chrome, Safari, Firefox, iOS Safari, Android Chrome    ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<style>
+  /* Preview wrapper – remove when pasting into Hessa.ai */
+  body { margin: 0; background: #000; }
+
+/* ── PHONE WRAP ──────────────────────────────────────────────── */
+.hd-phone-wrap { position: relative; margin-bottom: 32px; }
+.hd-phone--desat  { filter: saturate(.55); }
+.hd-phone--desat2 { filter: saturate(.5);  }
+
+/* ── DECORATIVE ORBS ─────────────────────────────────────────── */
+.hd-orb { position: absolute; pointer-events: none; border-radius: 50%; }
+.hd-orb--n1 { top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(200,255,0,.03) 0%,transparent 70%); }
+.hd-orb--n2 { top:50%;left:30%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(ellipse,rgba(200,180,0,.03) 0%,transparent 70%); }
+.hd-orb--n3 { top:50%;right:15%;transform:translateY(-50%);width:450px;height:450px;background:radial-gradient(ellipse,rgba(0,100,200,.035) 0%,transparent 70%); }
+.hd-orb--n5 { top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(200,255,0,.04) 0%,transparent 70%); }
+
+/* ── REEL BACKGROUNDS ────────────────────────────────────────── */
+.hd-ri-bg { width:100%; height:100%; }
+.hd-ri-bg--1 { background:linear-gradient(160deg,#8B4513 0%,#D2691E 30%,#FFD700 65%,#FF7F00 85%,#4a1a00 100%); }
+.hd-ri-bg--2 { background:linear-gradient(150deg,#8B6914,#D2A679,#F0C040); }
+.hd-ri-bg--3 { background:linear-gradient(150deg,#003366,#0066CC,#00AAFF); }
+.hd-ri-bg--4 { background:linear-gradient(150deg,#1a1a1a,#3d3d3d,#6a6a6a);filter:saturate(.3); }
+.hd-ri-bg--5 { background:linear-gradient(150deg,#000,#0a0a0a,#1a1a1a,#C8FF00); }
+
+/* ── PROGRESS FILL WIDTHS ────────────────────────────────────── */
+.hd-spf-40{width:40%}.hd-spf-48{width:48%}.hd-spf-57{width:57%}.hd-spf-62{width:62%}.hd-spf-72{width:72%}
+
+/* ── SCANNER EXTRAS ──────────────────────────────────────────── */
+.hd-scanner-dot    { color: var(--lime); font-size: 8px; }
+.hd-scanner-frames { font-size: 11px; color: var(--w40); font-family: var(--mono); }
+.hd-scanner-footer { display: flex; justify-content: space-between; }
+.hd-ec-grid  { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 4px; }
+.hd-ec-cell  { padding: 12px; text-align: center; }
+.hd-ec-num   { font-size: 18px; font-weight: 800; color: var(--lime); }
+.hd-brain-dot { width:8px;height:8px;background:var(--lime);border-radius:50%;animation:hd-blink 1.5s infinite;flex-shrink:0; }
+.hd-file-size { margin-left: auto; color: var(--w40); }
+.hd-chips-mt  { margin-top: 16px; }
+.hd-particle-canvas { position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.35; }
+
+/* ── WAVE BARS ───────────────────────────────────────────────── */
+.hd-wb-1{height:6px;animation-delay:0s}.hd-wb-2{height:10px;animation-delay:.1s}
+.hd-wb-3{height:14px;animation-delay:.2s}.hd-wb-4{height:18px;animation-delay:.3s}
+.hd-wb-5{height:22px;animation-delay:.4s}.hd-wb-6{height:18px;animation-delay:.5s}
+.hd-wb-7{height:14px;animation-delay:.4s}.hd-wb-8{height:10px;animation-delay:.3s}
+.hd-wb-9{height:14px;animation-delay:.2s}.hd-wb-10{height:18px;animation-delay:.1s}
+.hd-wb-11{height:22px;animation-delay:0s}.hd-wb-12{height:14px;animation-delay:.1s}
+.hd-wb-13{height:8px;animation-delay:.2s}.hd-wb-14{height:16px;animation-delay:.3s}
+.hd-wb-15{height:20px;animation-delay:.4s}.hd-wb-16{height:12px;animation-delay:.5s}
+
+/* ── FLOATER POSITIONS ───────────────────────────────────────── */
+.hd-f1a{right:-96px;top:38px;--dur:5s;--delay:0s}
+.hd-f1b{right:-88px;top:110px;--dur:6s;--delay:1.6s}
+.hd-f1c{right:-100px;top:180px;--dur:4.8s;--delay:3.2s}
+.hd-f2a{left:-98px;top:44px;--dur:5.5s;--delay:.8s}
+.hd-f2b{left:-90px;top:116px;--dur:4.8s;--delay:2.4s}
+.hd-f2c{left:-98px;top:188px;--dur:6s;--delay:4s}
+.hd-f3a{right:-94px;top:32px;--dur:4.5s;--delay:.4s}
+.hd-f3b{right:-88px;top:104px;--dur:5.5s;--delay:2s}
+.hd-f3c{right:-94px;top:176px;--dur:5s;--delay:3.6s}
+.hd-f4a{left:-90px;top:44px;--dur:5.2s;--delay:1s}
+.hd-f4b{left:-86px;top:116px;--dur:6.2s;--delay:2.6s}
+.hd-f4c{left:-92px;top:188px;--dur:4.8s;--delay:4.1s}
+.hd-f5a{right:-92px;top:28px;--dur:4.5s;--delay:.2s}
+.hd-f5b{right:-86px;top:100px;--dur:5.5s;--delay:1.8s}
+.hd-f5c{right:-96px;top:172px;--dur:5s;--delay:3.4s}
+
+
+/* ── EMAIL FORM ──────────────────────────────────────────────── */
+.hd-form { width:100%; max-width:480px; margin:0 auto; }
+.hd-form__wrap { display:flex; background:var(--w05); border:1px solid var(--border-s); border-radius:100px; overflow:hidden; transition:border-color .3s,box-shadow .3s; }
+.hd-form__wrap:focus-within { border-color:var(--border); box-shadow:0 0 0 3px var(--lime-08); }
+.hd-form__input { flex:1; padding:16px 24px; background:transparent; border:none; outline:none; color:var(--white); font-family:var(--font); font-size:15px; min-width:0; }
+.hd-form__input::placeholder { color:var(--w40); }
+.hd-form__submit { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; background:var(--lime); color:#000; font-weight:700; font-size:14px; border:none; cursor:pointer; font-family:var(--font); border-radius:100px; margin:4px; transition:opacity .3s,box-shadow .3s; white-space:nowrap; flex-shrink:0; }
+.hd-form__submit:hover { opacity:.9; box-shadow:0 0 30px rgba(200,255,0,.3); }
+.hd-form__submit:disabled { opacity:.6; cursor:not-allowed; pointer-events:none; }
+.hd-form__submit-loader { display:none; width:14px; height:14px; border:2px solid rgba(0,0,0,.3); border-top-color:#000; border-radius:50%; animation:hd-rotate .8s linear infinite; }
+.hd-form.hd-loading .hd-form__submit-text,
+.hd-form.hd-loading .hd-form__submit-arrow { display:none; }
+.hd-form.hd-loading .hd-form__submit-loader { display:block; }
+.hd-form__msg { margin-top:16px; font-size:13px; min-height:24px; display:flex; align-items:center; justify-content:center; }
+.hd-form__msg--ok { color:var(--lime); }
+.hd-form__msg--err { color:#ff6b6b; }
+.hd-form__note { margin-top:12px; font-size:12px; color:var(--w40); }
+.hd-form-success { padding:36px 28px; background:var(--lime-08); border:1px solid var(--border); border-radius:var(--r-lg); text-align:center; }
+.hd-form-success__icon { font-size:36px; margin-bottom:12px; display:block; }
+.hd-form-success__h { font-size:clamp(18px,2.5vw,26px); font-weight:700; color:var(--lime); margin-bottom:8px; }
+.hd-form-success__s { font-size:14px; color:var(--w40); line-height:1.6; }
+.hd-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border-width:0; }
+@media(max-width:480px) {
+  .hd-form__wrap { flex-direction:column; border-radius:var(--r-lg); }
+  .hd-form__input { padding:14px 20px; text-align:center; }
+  .hd-form__submit { margin:0 4px 4px; justify-content:center; border-radius:40px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HESSA AI CINEMATIC DEMO MODULE — START
+     PASTE THIS ENTIRE BLOCK BELOW YOUR EXISTING HERO SECTION
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="hd-root">
+
+<!-- ════════════════════════════════════════
+     STYLES — All scoped under .hd-root
+     ════════════════════════════════════════ -->
+<style>
+
+/* ── DESIGN TOKENS ──────────────────────────────────────────────── */
+.hd-root {
+  --lime:        #C8FF00;
+  --lime-glow:   rgba(200,255,0,.5);
+  --lime-30:     rgba(200,255,0,.3);
+  --lime-15:     rgba(200,255,0,.15);
+  --lime-08:     rgba(200,255,0,.08);
+  --lime-04:     rgba(200,255,0,.04);
+  --black:       #000000;
+  --void:        #050507;
+  --surf:        #0d0d0f;
+  --card:        #111113;
+  --white:       #ffffff;
+  --w80:         rgba(255,255,255,.80);
+  --w60:         rgba(255,255,255,.60);
+  --w40:         rgba(255,255,255,.40);
+  --w20:         rgba(255,255,255,.20);
+  --w10:         rgba(255,255,255,.10);
+  --w05:         rgba(255,255,255,.05);
+  --w02:         rgba(255,255,255,.02);
+  --border:      rgba(200,255,0,.18);
+  --border-s:    rgba(255,255,255,.07);
+  --font:        -apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,sans-serif;
+  --mono:        'SF Mono','Fira Code','Courier New',monospace;
+  --r-sm:        8px;
+  --r-md:        16px;
+  --r-lg:        24px;
+  --r-xl:        40px;
+  --r-phone:     46px;
+  --ease:        cubic-bezier(.16,1,.3,1);
+  --ease2:       cubic-bezier(.23,1,.32,1);
+  --spy:         clamp(72px,11vw,144px);
+  --cmax:        1200px;
+}
+
+/* ── RESET (scoped) ─────────────────────────────────────────────── */
+.hd-root *,.hd-root *::before,.hd-root *::after{box-sizing:border-box;margin:0;padding:0}
+.hd-root{font-family:var(--font);background:var(--black);color:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────── */
+.hd-sec{position:relative;padding:var(--spy) 0;overflow:hidden}
+.hd-sec--void{background:var(--void)}
+.hd-sec--surf{background:var(--surf)}
+.hd-wrap{width:100%;max-width:var(--cmax);margin:0 auto;padding:0 clamp(20px,5vw,80px)}
+.hd-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border-s) 20%,var(--border) 50%,var(--border-s) 80%,transparent)}
+
+/* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
+.hd-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);margin-bottom:16px}
+.hd-eyebrow::before{content:'';display:block;width:16px;height:1px;background:var(--lime);flex-shrink:0}
+.hd-mega{font-size:clamp(38px,7vw,96px);font-weight:700;line-height:1.02;letter-spacing:-.038em;color:var(--white)}
+.hd-mega em{font-style:normal;color:var(--lime);text-shadow:0 0 60px rgba(200,255,0,.35)}
+.hd-h2{font-size:clamp(28px,4.5vw,60px);font-weight:700;line-height:1.1;letter-spacing:-.028em}
+.hd-h3{font-size:clamp(20px,2.8vw,36px);font-weight:650;line-height:1.2;letter-spacing:-.02em}
+.hd-body{font-size:clamp(14px,1.4vw,17px);line-height:1.78;color:var(--w60)}
+.hd-small{font-size:12px;color:var(--w40);letter-spacing:.04em}
+.hd-lime{color:var(--lime)}
+.hd-mono{font-family:var(--mono)}
+.hd-center{text-align:center}
+
+/* ── SCROLL REVEAL ──────────────────────────────────────────────── */
+.hd-fade{opacity:0;transform:translateY(38px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.hd-fade.on{opacity:1;transform:none}
+.hd-fade-up{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.hd-fade-up.on{opacity:1;transform:none}
+.hd-scale{opacity:0;transform:scale(.92);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.hd-scale.on{opacity:1;transform:none}
+.hd-d1{transition-delay:.08s}.hd-d2{transition-delay:.16s}.hd-d3{transition-delay:.25s}
+.hd-d4{transition-delay:.34s}.hd-d5{transition-delay:.44s}.hd-d6{transition-delay:.55s}
+
+/* ── KEYFRAMES ──────────────────────────────────────────────────── */
+@keyframes hd-blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes hd-pulse-glow{0%,100%{box-shadow:0 0 20px var(--lime-15)}50%{box-shadow:0 0 50px var(--lime-30),0 0 100px var(--lime-15)}}
+@keyframes hd-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes hd-float-b{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes hd-card-rise{
+  0%{opacity:0;transform:translateY(22px) scale(.86)}
+  18%{opacity:1;transform:translateY(0) scale(1)}
+  72%{opacity:1;transform:translateY(-28px) scale(1)}
+  100%{opacity:0;transform:translateY(-58px) scale(.96)}
+}
+@keyframes hd-scan{0%{left:-3px}100%{left:calc(100% + 3px)}}
+@keyframes hd-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes hd-shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes hd-count-pop{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+@keyframes hd-progress-in{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes hd-dot-wave{0%,100%{transform:scaleY(1);opacity:.4}50%{transform:scaleY(2.4);opacity:1}}
+@keyframes hd-node-pulse{0%,100%{r:4;opacity:.6}50%{r:7;opacity:1}}
+
+/* ── GLASS CARDS ────────────────────────────────────────────────── */
+.hd-glass{background:var(--w05);border:1px solid var(--border-s);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:var(--r-lg)}
+.hd-glass-lime{background:var(--lime-08);border:1px solid var(--border);border-radius:var(--r-lg)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION 1 — INTRO BRIDGE
+   ═══════════════════════════════════════════════════════════════════ */
+#hd-intro{padding:var(--spy) 0;text-align:center;position:relative}
+#hd-intro .hd-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+
+.hd-live-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px 6px 12px;
+  border:1px solid var(--border);border-radius:100px;
+  background:var(--lime-08);
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);
+  margin-bottom:28px;cursor:default;
+}
+.hd-live-badge__dot{width:7px;height:7px;border-radius:50%;background:var(--lime);animation:hd-blink 1.4s infinite;flex-shrink:0}
+
+.hd-stats-row{display:flex;justify-content:center;gap:clamp(32px,7vw,110px);flex-wrap:wrap;margin:60px 0}
+.hd-stat__num{
+  font-size:clamp(44px,7vw,80px);font-weight:800;line-height:1;
+  color:var(--lime);letter-spacing:-.05em;
+  text-shadow:0 0 50px rgba(200,255,0,.4);margin-bottom:10px;
+}
+.hd-stat__lbl{font-size:12px;color:var(--w40);letter-spacing:.07em;text-transform:uppercase}
+
+/* Steps grid */
+.hd-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--border-s);border-radius:var(--r-lg);overflow:hidden;
+}
+@media(max-width:700px){.hd-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.hd-steps{grid-template-columns:1fr}}
+
+.hd-step{
+  padding:clamp(28px,4vw,48px) clamp(20px,3vw,36px);
+  background:var(--black);
+  border-right:1px solid var(--border-s);
+  position:relative;overflow:hidden;transition:background .35s;
+}
+.hd-step:last-child{border-right:none}
+@media(max-width:700px){
+  .hd-step{border-right:none;border-bottom:1px solid var(--border-s)}
+  .hd-step:last-child,.hd-step:nth-child(2n){border-right:none}
+}
+.hd-step::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--lime),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease);
+}
+.hd-step:hover::after{transform:scaleX(1)}
+.hd-step:hover{background:rgba(200,255,0,.025)}
+.hd-step__n{font-size:10px;font-weight:700;color:var(--lime);font-family:var(--mono);letter-spacing:.2em;margin-bottom:16px}
+.hd-step__icon{
+  width:44px;height:44px;margin-bottom:16px;border-radius:12px;
+  background:var(--lime-08);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.hd-step__title{font-size:clamp(15px,1.8vw,18px);font-weight:600;color:var(--white);margin-bottom:6px;letter-spacing:-.01em}
+.hd-step__desc{font-size:12px;color:var(--w40);line-height:1.65}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION 2 — UPLOAD SIMULATION
+   ═══════════════════════════════════════════════════════════════════ */
+#hd-upload{background:var(--void)}
+
+.hd-upload-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,60px);
+  align-items:start;margin-top:56px;
+}
+@media(max-width:768px){.hd-upload-grid{grid-template-columns:1fr}}
+
+.hd-drop{
+  border:1px dashed var(--border);border-radius:var(--r-lg);
+  padding:clamp(40px,6vw,72px) 32px;text-align:center;
+  cursor:pointer;position:relative;overflow:hidden;
+  background:var(--lime-04);
+  transition:background .35s,border-color .35s;user-select:none;
+}
+.hd-drop::before,.hd-drop::after{
+  content:'';position:absolute;width:22px;height:22px;
+  border-color:var(--lime);border-style:solid;opacity:.45;
+}
+.hd-drop::before{top:12px;left:12px;border-width:2px 0 0 2px;border-radius:4px 0 0 0}
+.hd-drop::after{bottom:12px;right:12px;border-width:0 2px 2px 0;border-radius:0 0 4px 0}
+.hd-drop:hover,.hd-drop.active{background:rgba(200,255,0,.07);border-color:var(--lime);border-style:solid}
+
+.hd-drop-icon{
+  width:56px;height:56px;margin:0 auto 18px;border-radius:50%;
+  background:var(--lime-15);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.hd-drop-h{font-size:clamp(16px,2.2vw,22px);font-weight:600;margin-bottom:8px}
+.hd-drop-s{font-size:13px;color:var(--w40);margin-bottom:28px}
+
+.hd-drop-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 24px;background:var(--lime);color:#000;
+  font-weight:700;font-size:13px;border-radius:100px;
+  border:none;cursor:pointer;font-family:var(--font);
+  transition:transform .3s,box-shadow .3s;
+}
+.hd-drop-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(200,255,0,.4)}
+
+.hd-trust-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.hd-trust-pill{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+  border:1px solid var(--border-s);border-radius:100px;
+  font-size:10px;color:var(--w40);letter-spacing:.04em;
+}
+
+/* Progress */
+.hd-prog-panel{display:none;flex-direction:column;gap:14px;margin-top:24px}
+.hd-prog-panel.show{display:flex}
+.hd-file-row{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:var(--w05);border-radius:var(--r-sm);
+  font-size:12px;font-family:var(--mono);color:var(--w60);
+}
+.hd-file-ext{
+  padding:2px 6px;background:var(--lime-15);color:var(--lime);
+  border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase;
+}
+.hd-prog-labels{display:flex;justify-content:space-between;font-size:11px;font-family:var(--mono);color:var(--w40);margin-bottom:6px}
+.hd-prog-pct{color:var(--lime)}
+.hd-prog-track{height:3px;background:var(--w05);border-radius:2px;overflow:hidden}
+.hd-prog-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--lime),rgba(200,255,0,.6));
+  border-radius:2px;box-shadow:0 0 12px var(--lime-glow);
+  transition:width .12s linear;
+}
+.hd-prog-status{font-size:11px;color:var(--w40);font-family:var(--mono)}
+
+/* Scanner side */
+.hd-scanner-side{display:flex;flex-direction:column;gap:20px}
+.hd-scanner-head{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;color:var(--w60);
+}
+.hd-scanner-canvas{
+  width:100%;display:block;
+  border:1px solid var(--border-s);border-radius:var(--r-md);
+}
+.hd-chips-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.hd-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;background:var(--black);
+  border:1px solid var(--border);border-radius:100px;
+  font-size:11px;color:var(--w60);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease);
+}
+.hd-chip.pop{opacity:1;transform:none}
+.hd-chip__dot{width:5px;height:5px;border-radius:50%;background:var(--lime);flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════════════════════
+   NARRATIVES — shared layout
+   ═══════════════════════════════════════════════════════════════════ */
+.hd-nar{padding:var(--spy) 0;position:relative;overflow:hidden}
+.hd-nar--alt{background:var(--void)}
+
+.hd-nar-grid{
+  display:grid;grid-template-columns:1fr 100px 1fr;
+  gap:clamp(24px,4vw,64px);align-items:center;
+}
+@media(max-width:920px){
+  .hd-nar-grid{grid-template-columns:1fr}
+  .hd-nar-center{display:none}
+}
+@media(max-width:580px){.hd-nar-phones{display:none}}
+
+/* Persona */
+.hd-persona{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.hd-avatar{
+  width:44px;height:44px;border-radius:50%;
+  overflow:hidden;flex-shrink:0;
+  border:1px solid var(--border-s);position:relative;
+}
+.hd-pname{font-size:13px;font-weight:600;margin-bottom:2px}
+.hd-prole{font-size:11px;color:var(--w40)}
+
+/* Narrative number */
+.hd-nar-num{
+  font-size:clamp(64px,10vw,120px);font-weight:800;
+  line-height:.85;color:var(--w02);letter-spacing:-.07em;
+  pointer-events:none;margin-bottom:-12px;
+}
+.hd-nar-h{
+  font-size:clamp(26px,4.2vw,50px);font-weight:700;
+  line-height:1.12;letter-spacing:-.028em;margin-bottom:14px;
+}
+.hd-nar-sub{
+  font-size:clamp(13px,1.4vw,16px);color:var(--w40);
+  line-height:1.78;max-width:400px;margin-bottom:20px;
+}
+.hd-nar-quote{
+  padding:14px 20px;border-left:2px solid var(--lime);
+  background:var(--lime-08);border-radius:0 var(--r-sm) var(--r-sm) 0;
+  font-size:13px;font-style:italic;color:var(--w60);margin-bottom:22px;
+}
+.hd-found-list{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.hd-found-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--w60)}
+.hd-found-item::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--lime);flex-shrink:0}
+.hd-reel-out{
+  padding:14px 20px;background:var(--black);
+  border:1px solid var(--border);border-radius:var(--r-md);
+}
+.hd-reel-out__lbl{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin-bottom:6px}
+.hd-reel-out__t{font-size:clamp(14px,1.6vw,18px);font-weight:600;color:var(--white);line-height:1.35}
+
+/* AI Center column */
+.hd-nar-center{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  width:100px;
+}
+.hd-ai-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--lime),transparent)}
+.hd-ai-line-d{background:linear-gradient(to top,var(--lime),transparent)}
+.hd-ai-badge{
+  padding:9px 14px;background:var(--lime-08);
+  border:1px solid var(--border);border-radius:100px;
+  font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lime);text-align:center;
+  animation:hd-pulse-glow 3s infinite;white-space:nowrap;
+}
+.hd-ai-dots{display:flex;gap:4px;justify-content:center}
+.hd-ai-dot{width:4px;height:4px;border-radius:50%;background:var(--lime);opacity:.5}
+.hd-ai-dot:nth-child(1){animation:hd-blink 1.2s 0s infinite}
+.hd-ai-dot:nth-child(2){animation:hd-blink 1.2s .3s infinite}
+.hd-ai-dot:nth-child(3){animation:hd-blink 1.2s .6s infinite}
+
+/* ── PHONE MOCKUP ───────────────────────────────────────────────── */
+.hd-nar-phones{position:relative;display:flex;flex-direction:column;align-items:center}
+.hd-phone-duo{display:flex;gap:clamp(14px,2vw,28px);justify-content:center;align-items:center}
+
+.hd-phone{
+  position:relative;
+  width:clamp(130px,20vw,200px);aspect-ratio:9/19.5;
+  background:linear-gradient(155deg,#1e1e1e,#0a0a0a);
+  border-radius:var(--r-phone);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 0 0 1px rgba(0,0,0,.9),0 24px 80px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.5);
+  overflow:hidden;flex-shrink:0;
+  animation:hd-float 6s ease-in-out infinite;
+}
+.hd-phone:nth-child(2){animation:hd-float-b 5.5s ease-in-out infinite;animation-delay:-2s}
+.hd-phone::before{
+  content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:68px;height:22px;background:#000;border-radius:18px;z-index:20;
+}
+.hd-phone-screen{position:absolute;inset:0;border-radius:inherit;overflow:hidden}
+.hd-phone-lbl{
+  position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--w40);white-space:nowrap;
+}
+.hd-phone-lbl.after{color:var(--lime)}
+.hd-phone-glow{
+  position:absolute;bottom:-50px;left:50%;transform:translateX(-50%);
+  width:90%;height:90px;
+  background:radial-gradient(ellipse,var(--lime-15) 0%,transparent 70%);
+  pointer-events:none;filter:blur(12px);
+}
+
+/* Raw footage screen */
+.hd-scr-raw{
+  width:100%;height:100%;background:#060606;
+  display:grid;grid-template-columns:1fr 1fr;
+  grid-template-rows:repeat(4,1fr);
+  gap:2px;padding:40px 2px 2px;
+}
+.hd-thumb{border-radius:2px;position:relative;overflow:hidden}
+.hd-thumb-ts{
+  position:absolute;bottom:3px;right:4px;
+  font-size:7px;font-family:var(--mono);
+  color:rgba(255,255,255,.55);background:rgba(0,0,0,.5);
+  padding:1px 3px;border-radius:2px;
+}
+
+/* Reel output screen */
+.hd-scr-reel{
+  width:100%;height:100%;background:#000;
+  display:flex;flex-direction:column;padding-top:40px;position:relative;
+}
+.hd-scr-scene{flex:1;position:relative;overflow:hidden}
+.hd-scr-scanline{
+  position:absolute;top:0;left:-3px;width:3px;height:100%;
+  background:linear-gradient(to bottom,transparent,var(--lime) 40%,var(--lime) 60%,transparent);
+  opacity:.5;animation:hd-scan 3s linear infinite;
+}
+.hd-scr-title{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:20px 10px 8px;
+  background:linear-gradient(to top,rgba(0,0,0,.95),transparent);
+  font-size:8px;font-weight:700;color:var(--white);text-align:center;letter-spacing:.05em;line-height:1.4;
+}
+.hd-scr-bar{
+  padding:8px 10px;background:rgba(0,0,0,.92);
+  display:flex;align-items:center;gap:8px;
+}
+.hd-scr-play{width:14px;height:14px;fill:var(--lime);flex-shrink:0}
+.hd-scr-prog{flex:1;height:2px;background:rgba(255,255,255,.18);border-radius:1px;position:relative;overflow:hidden}
+.hd-scr-prog-fill{position:absolute;top:0;left:0;height:100%;background:var(--lime);border-radius:1px}
+
+/* Floating memory cards */
+.hd-floater{
+  position:absolute;
+  padding:8px 12px;background:rgba(6,6,8,.97);
+  border:1px solid var(--border);border-radius:10px;
+  font-size:10px;font-weight:600;color:var(--white);white-space:nowrap;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 4px 20px rgba(0,0,0,.7),0 0 0 1px var(--lime-08);
+  animation:hd-card-rise var(--dur,5s) var(--delay,0s) infinite var(--ease2);
+  z-index:10;pointer-events:none;
+}
+.hd-floater__ico{margin-right:5px}
+
+/* ── SCENE GRADIENTS — Abstract cinematics, no real people ──────── */
+/* N1 Amara – Summer Trip (warm golds/sunsets) */
+.hd-s1a{background:linear-gradient(145deg,#8B4513,#D2691E,#FF7F00)}
+.hd-s1b{background:linear-gradient(145deg,#1a3a5c,#2e7bc4,#7bbce0)}
+.hd-s1c{background:linear-gradient(145deg,#2d4a2d,#4a7c59)}
+.hd-s1d{background:linear-gradient(145deg,#d44000,#ff7834,#ffa06a)}
+.hd-s1e{background:linear-gradient(145deg,#1a1a2e,#0f3460)}
+.hd-s1f{background:linear-gradient(145deg,#c9a86c,#f2d06b)}
+.hd-s1g{background:linear-gradient(145deg,#2c3e50,#4a6fa5)}
+.hd-s1h{background:linear-gradient(145deg,#3d1c02,#7b3f00,#c67c52)}
+.hd-s1-reel{background:linear-gradient(160deg,#8B4513 0%,#D2691E 35%,#FFD700 70%,#FF7F00 100%)}
+
+/* N2 Family – Nostalgic amber */
+.hd-s2a{background:linear-gradient(145deg,#8B6914,#C8952C,#F0C040)}
+.hd-s2b{background:linear-gradient(145deg,#5C3317,#8B5E3C,#D2A679)}
+.hd-s2c{background:linear-gradient(145deg,#2F4F2F,#556B2F,#8FBC8F)}
+.hd-s2d{background:linear-gradient(145deg,#8B2500,#CD5C5C,#FFAAAA)}
+.hd-s2e{background:linear-gradient(145deg,#4B3B2A,#8B7355,#D2B48C)}
+.hd-s2f{background:linear-gradient(145deg,#1C1C3A,#3A3A7A,#7070CC)}
+.hd-s2g{background:linear-gradient(145deg,#5C4A1E,#9C7A30,#D4A843)}
+.hd-s2h{background:linear-gradient(145deg,#1A3A1A,#2D6A2D,#5A9A5A)}
+.hd-s2-reel{background:linear-gradient(160deg,#8B6914 0%,#D2A679 45%,#F0C040 100%)}
+
+/* N3 Friends – Vibrant energy */
+.hd-s3a{background:linear-gradient(145deg,#003366,#0066CC,#00CCFF)}
+.hd-s3b{background:linear-gradient(145deg,#004400,#00AA00)}
+.hd-s3c{background:linear-gradient(145deg,#440044,#AA0088,#FF00CC)}
+.hd-s3d{background:linear-gradient(145deg,#FF4500,#FF6347,#FFA07A)}
+.hd-s3e{background:linear-gradient(145deg,#1a1a1a,#444)}
+.hd-s3f{background:linear-gradient(145deg,#004466,#00AACC)}
+.hd-s3g{background:linear-gradient(145deg,#FF8C00,#FFD700)}
+.hd-s3h{background:linear-gradient(145deg,#003300,#00CC66)}
+.hd-s3-reel{background:linear-gradient(160deg,#003366 0%,#0066CC 40%,#00AAFF 100%)}
+
+/* N4 Love Story – Film grain, muted tones */
+.hd-s4a{background:linear-gradient(145deg,#2C2C2C,#666)}
+.hd-s4b{background:linear-gradient(145deg,#3D2B1F,#8B6A55)}
+.hd-s4c{background:linear-gradient(145deg,#1A1A1A,#555)}
+.hd-s4d{background:linear-gradient(145deg,#2D1B1B,#664444)}
+.hd-s4e{background:linear-gradient(145deg,#1C1C2E,#3A3A6E)}
+.hd-s4f{background:linear-gradient(145deg,#3A3020,#8B7A60)}
+.hd-s4g{background:linear-gradient(145deg,#201020,#501840)}
+.hd-s4h{background:linear-gradient(145deg,#1A2A1A,#3A5A3A)}
+.hd-s4-reel{background:linear-gradient(160deg,#1a1a1a,#3d3d3d,#6a6a6a);filter:saturate(.35)}
+
+/* N5 Creator – High contrast / lime */
+.hd-s5a{background:linear-gradient(145deg,#0D0D0D,#1A1A1A,#C8FF00)}
+.hd-s5b{background:linear-gradient(145deg,#001A00,#004400,#00CC44)}
+.hd-s5c{background:linear-gradient(145deg,#1A1A00,#3D3D00,#C8CC00)}
+.hd-s5d{background:linear-gradient(145deg,#0A0A0A,#333)}
+.hd-s5e{background:linear-gradient(145deg,#003300,#00FF44,#C8FF00)}
+.hd-s5f{background:linear-gradient(145deg,#1A0D00,#4A2200)}
+.hd-s5g{background:linear-gradient(145deg,#0D0D1A,#1A1A3A)}
+.hd-s5h{background:linear-gradient(145deg,#1A1A1A,#333,#C8FF00)}
+.hd-s5-reel{background:linear-gradient(160deg,#000 0%,#0a0a0a 35%,#1a1a1a 65%,#C8FF00 100%)}
+
+/* Abstract avatar gradients (fictional silhouettes, no real faces) */
+.hd-av1{background:radial-gradient(ellipse 56% 76% at 50% 30%,#c4a882,#8b6040 50%,transparent 80%),radial-gradient(ellipse 50% 50% at 50% 80%,#2a1508,transparent)}
+.hd-av2{background:radial-gradient(ellipse 56% 76% at 50% 30%,#b89070,#7a5030 50%,transparent 80%),radial-gradient(ellipse 50% 50% at 50% 80%,#1e0d04,transparent)}
+.hd-av3{background:radial-gradient(ellipse 56% 76% at 50% 30%,#9aafaa,#607870 50%,transparent 80%),radial-gradient(ellipse 50% 50% at 50% 80%,#0a1210,transparent)}
+.hd-av4{background:radial-gradient(ellipse 56% 76% at 50% 30%,#e0c4a8,#b08060 50%,transparent 80%),radial-gradient(ellipse 50% 50% at 50% 80%,#1a0c04,transparent)}
+.hd-av5{background:radial-gradient(ellipse 56% 76% at 50% 30%,#aab4c0,#788088 50%,transparent 80%),radial-gradient(ellipse 50% 50% at 50% 80%,#0a0c10,transparent)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION 8 — AI BRAIN
+   ═══════════════════════════════════════════════════════════════════ */
+#hd-brain{background:var(--void)}
+.hd-brain-box{
+  border:1px solid var(--border-s);border-radius:var(--r-lg);
+  overflow:hidden;background:var(--black);margin-top:56px;
+}
+.hd-brain-top{
+  padding:18px 28px;border-bottom:1px solid var(--border-s);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.hd-brain-top-t{font-size:13px;font-weight:600;color:var(--w60)}
+.hd-brain-top-s{font-size:11px;color:var(--w40);font-family:var(--mono);margin-left:auto}
+.hd-brain-canvas{width:100%;display:block}
+.hd-brain-legend{
+  display:flex;gap:24px;flex-wrap:wrap;padding:16px 28px;
+  border-top:1px solid var(--border-s);
+}
+.hd-leg-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--w40)}
+.hd-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.hd-leg-lime{background:var(--lime)}.hd-leg-w{background:var(--w40)}.hd-leg-dim{background:var(--w20)}
+
+/* Scene cluster */
+.hd-cluster-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px;
+}
+@media(max-width:600px){.hd-cluster-grid{grid-template-columns:repeat(3,1fr)}}
+.hd-ccard{
+  border-radius:var(--r-md);overflow:hidden;
+  border:1px solid var(--border-s);position:relative;cursor:pointer;
+  transition:transform .35s var(--ease),border-color .3s;
+}
+.hd-ccard:hover{transform:scale(1.06) translateY(-5px);border-color:var(--border)}
+.hd-ccard__vis{aspect-ratio:3/4}
+.hd-ccard__lbl{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:8px;background:linear-gradient(to top,rgba(0,0,0,.9),transparent);
+  font-size:8px;font-weight:700;color:var(--white);letter-spacing:.08em;text-transform:uppercase;
+}
+.hd-ccard__score{
+  position:absolute;top:6px;right:6px;padding:2px 6px;
+  background:var(--lime);color:#000;font-size:8px;font-weight:800;
+  border-radius:4px;font-family:var(--mono);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION 9 — REEL CINEMA
+   ═══════════════════════════════════════════════════════════════════ */
+#hd-reel .hd-reel-showcase{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:16px;margin-top:56px;
+}
+@media(max-width:900px){#hd-reel .hd-reel-showcase{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){#hd-reel .hd-reel-showcase{grid-template-columns:1fr}}
+
+.hd-ri{
+  border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--border-s);background:var(--surf);
+  position:relative;cursor:pointer;
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .3s;
+}
+.hd-ri:hover{
+  transform:translateY(-7px) scale(1.01);
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px var(--border);
+  border-color:var(--border);
+}
+.hd-ri--hero{grid-row:span 2}
+.hd-ri__vis{aspect-ratio:9/16;position:relative;overflow:hidden}
+.hd-ri--hero .hd-ri__vis{aspect-ratio:unset;min-height:400px}
+@media(max-width:900px){.hd-ri--hero .hd-ri__vis{min-height:260px}}
+.hd-ri__over{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.88) 0%,transparent 55%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:20px;
+}
+.hd-ri__tag{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 8px;
+  background:var(--lime);color:#000;border-radius:100px;
+  font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:10px;width:fit-content;
+}
+.hd-ri__title{font-size:clamp(13px,1.5vw,16px);font-weight:600;color:var(--white);line-height:1.3;margin-bottom:6px}
+.hd-ri__meta{font-size:10px;color:var(--w40);display:flex;align-items:center;gap:8px}
+.hd-ri__dot{width:3px;height:3px;border-radius:50%;background:var(--w40)}
+.hd-play{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;background:rgba(200,255,0,.12);
+  border:1px solid var(--border);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);opacity:0;transition:opacity .3s;
+}
+.hd-ri:hover .hd-play{opacity:1}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION 10 — BRIDGE CTA
+   ═══════════════════════════════════════════════════════════════════ */
+#hd-bridge{background:var(--void);text-align:center;position:relative}
+.hd-bridge-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 50% 100%,rgba(200,255,0,.055) 0%,transparent 70%);
+}
+
+.hd-btn-pri{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:18px 38px;background:var(--lime);color:#000;
+  font-weight:700;font-size:clamp(14px,1.6vw,17px);letter-spacing:-.01em;
+  border-radius:100px;border:none;cursor:pointer;text-decoration:none;
+  font-family:var(--font);transition:all .3s var(--ease);
+  box-shadow:0 0 50px rgba(200,255,0,.25);
+}
+.hd-btn-pri:hover{transform:scale(1.04) translateY(-2px);box-shadow:0 0 70px rgba(200,255,0,.45)}
+.hd-btn-ghost{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 36px;background:transparent;color:var(--w60);
+  font-size:clamp(14px,1.6vw,17px);font-weight:500;
+  border:1px solid var(--border-s);border-radius:100px;
+  cursor:pointer;text-decoration:none;font-family:var(--font);
+  transition:all .3s;
+}
+.hd-btn-ghost:hover{background:var(--w05);border-color:var(--w20)}
+.hd-btn-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+
+.hd-trust-row{
+  display:flex;gap:32px;flex-wrap:wrap;justify-content:center;
+  margin-top:48px;padding-top:48px;border-top:1px solid var(--border-s);
+}
+.hd-trust-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--w40)}
+.hd-trust-ico{color:var(--lime);font-size:14px}
+
+/* ─ Utilities ──────────────────────────────────────────────────── */
+.hd-mt-sm{margin-top:16px}.hd-mt-md{margin-top:32px}.hd-mt-lg{margin-top:clamp(40px,6vw,80px)}
+.hd-mb-sm{margin-bottom:16px}.hd-mb-md{margin-bottom:32px}.hd-mb-lg{margin-bottom:clamp(40px,6vw,80px)}
+.hd-max-560{max-width:560px}.hd-mx-auto{margin-left:auto;margin-right:auto}
+.hd-nar-tag{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+
+/* Waveform bar decoration */
+.hd-wave{display:flex;align-items:center;gap:3px;margin-top:10px}
+.hd-wave-bar{
+  width:3px;border-radius:2px;background:var(--lime);opacity:.5;
+  animation:hd-dot-wave 1.4s ease-in-out infinite;
+}
+</style>
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — INTRO BRIDGE
+     "The AI That Sees Every Moment."
+     ════════════════════════════════════════ -->
+<section id="hd-intro" class="hd-sec">
+  <!-- Neural particle canvas bg -->
+  <canvas id="hd-particle-cvs" class="hd-bg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.35"></canvas>
+
+  <div class="hd-wrap hd-center">
+
+    <div class="hd-live-badge hd-fade">
+      <span class="hd-live-badge__dot"></span>
+      Interactive Cinematic Demo
+    </div>
+
+    <h2 class="hd-mega hd-fade hd-d1">
+      The AI That Sees<br><em>Every Moment.</em>
+    </h2>
+
+    <p class="hd-body hd-fade hd-d2 hd-max-560 hd-mx-auto hd-mt-sm">
+      From hours of raw, unorganised footage to a cinematic story reel —<br>
+      automatically, privately, beautifully.
+    </p>
+
+    <!-- Stats -->
+    <div class="hd-stats-row hd-fade hd-d3">
+      <div>
+        <div class="hd-stat__num">
+          <span class="hd-counter" data-target="4" data-suffix="hrs">4hrs</span>
+        </div>
+        <div class="hd-stat__lbl">of footage analysed</div>
+      </div>
+      <div>
+        <div class="hd-stat__num">
+          <span class="hd-counter" data-target="23" data-suffix="">23</span>
+        </div>
+        <div class="hd-stat__lbl">meaningful moments found</div>
+      </div>
+      <div>
+        <div class="hd-stat__num">
+          <span class="hd-counter" data-target="1" data-suffix="">1</span>
+        </div>
+        <div class="hd-stat__lbl">cinematic story reel</div>
+      </div>
+    </div>
+
+    <!-- 4 Steps -->
+    <div class="hd-steps hd-fade hd-d4">
+
+      <div class="hd-step">
+        <div class="hd-step__n">01 / 04</div>
+        <div class="hd-step__icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v10M10 3L7.5 5.5M10 3l2.5 2.5" stroke="#C8FF00" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M4 14v2a2 2 0 002 2h8a2 2 0 002-2v-2" stroke="#C8FF00" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="hd-step__title">Upload</div>
+        <div class="hd-step__desc">Upload any video you own. Your footage stays yours — always.</div>
+      </div>
+
+      <div class="hd-step">
+        <div class="hd-step__n">02 / 04</div>
+        <div class="hd-step__icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="7" stroke="#C8FF00" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <circle cx="10" cy="10" r="3" fill="#C8FF00" opacity=".4"/>
+            <circle cx="10" cy="10" r="1.2" fill="#C8FF00"/>
+          </svg>
+        </div>
+        <div class="hd-step__title">Process</div>
+        <div class="hd-step__desc">AI scans every frame for meaningful, emotional moments — privately.</div>
+      </div>
+
+      <div class="hd-step">
+        <div class="hd-step__n">03 / 04</div>
+        <div class="hd-step__icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 10l5 5L17 4" stroke="#C8FF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="hd-step__title">Discover</div>
+        <div class="hd-step__desc">Your real, candid moments surface — ranked by emotional intensity.</div>
+      </div>
+
+      <div class="hd-step">
+        <div class="hd-step__n">04 / 04</div>
+        <div class="hd-step__icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="4" width="14" height="12" rx="2" stroke="#C8FF00" stroke-width="1.5"/>
+            <path d="M8 8l5 2-5 2V8z" fill="#C8FF00"/>
+          </svg>
+        </div>
+        <div class="hd-step__title">Share</div>
+        <div class="hd-step__desc">Download a beautifully sequenced cinematic story reel. Instantly.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — UPLOAD SIMULATION
+     ════════════════════════════════════════ -->
+<section id="hd-upload" class="hd-sec hd-sec--void">
+  <div class="hd-wrap">
+
+    <div class="hd-center hd-mb-lg">
+      <div class="hd-eyebrow hd-fade hd-mx-auto">Interactive Demo</div>
+      <h2 class="hd-h2 hd-fade hd-d1">Watch Hessa Work.</h2>
+      <p class="hd-body hd-fade hd-d2 hd-max-560 hd-mx-auto hd-mt-sm">
+        Tap to simulate uploading your footage. Watch Hessa find the moments that matter.
+      </p>
+    </div>
+
+    <div class="hd-upload-grid">
+
+      <!-- Left: Drop zone -->
+      <div class="hd-fade hd-d2">
+        <div class="hd-drop" id="hd-drop">
+          <div class="hd-drop-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v13M12 3L9 6M12 3l3 3" stroke="#C8FF00" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M5 16v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="#C8FF00" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="hd-drop-h">Drop your video here</div>
+          <div class="hd-drop-s">summer_trip.mov &nbsp;·&nbsp; 4h 12m &nbsp;·&nbsp; 18.4 GB</div>
+          <button class="hd-drop-btn" id="hd-drop-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 2v8M7 2L5 4M7 2l2 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Simulate Upload
+          </button>
+
+          <!-- Progress -->
+          <div class="hd-prog-panel" id="hd-prog-panel">
+            <div class="hd-file-row">
+              <span class="hd-file-ext">MOV</span>
+              <span>summer_trip.mov</span>
+              <span style="margin-left:auto;color:var(--w40)">18.4 GB</span>
+            </div>
+            <div>
+              <div class="hd-prog-labels">
+                <span class="hd-prog-status" id="hd-prog-status">Preparing...</span>
+                <span class="hd-prog-pct" id="hd-prog-pct">0%</span>
+              </div>
+              <div class="hd-prog-track">
+                <div class="hd-prog-fill" id="hd-prog-fill"></div>
+              </div>
+            </div>
+            <!-- Waveform indicator -->
+            <div class="hd-wave" id="hd-wave">
+              <div class="hd-wave-bar" style="height:6px;animation-delay:0s"></div>
+              <div class="hd-wave-bar" style="height:10px;animation-delay:.1s"></div>
+              <div class="hd-wave-bar" style="height:14px;animation-delay:.2s"></div>
+              <div class="hd-wave-bar" style="height:18px;animation-delay:.3s"></div>
+              <div class="hd-wave-bar" style="height:22px;animation-delay:.4s"></div>
+              <div class="hd-wave-bar" style="height:18px;animation-delay:.5s"></div>
+              <div class="hd-wave-bar" style="height:14px;animation-delay:.4s"></div>
+              <div class="hd-wave-bar" style="height:10px;animation-delay:.3s"></div>
+              <div class="hd-wave-bar" style="height:14px;animation-delay:.2s"></div>
+              <div class="hd-wave-bar" style="height:18px;animation-delay:.1s"></div>
+              <div class="hd-wave-bar" style="height:22px;animation-delay:0s"></div>
+              <div class="hd-wave-bar" style="height:14px;animation-delay:.1s"></div>
+              <div class="hd-wave-bar" style="height:8px;animation-delay:.2s"></div>
+              <div class="hd-wave-bar" style="height:16px;animation-delay:.3s"></div>
+              <div class="hd-wave-bar" style="height:20px;animation-delay:.4s"></div>
+              <div class="hd-wave-bar" style="height:12px;animation-delay:.5s"></div>
+            </div>
+          </div>
+
+          <div class="hd-trust-pills">
+            <span class="hd-trust-pill">✓ Videos you own only</span>
+            <span class="hd-trust-pill">✓ Auto-deleted after</span>
+            <span class="hd-trust-pill">✓ No face data stored</span>
+          </div>
+        </div>
+
+        <!-- Moment chips -->
+        <div class="hd-chips-wrap" style="margin-top:16px" id="hd-chips">
+          <span class="hd-chip"><span class="hd-chip__dot"></span>✦ Candid laugh — 0:34:12</span>
+          <span class="hd-chip"><span class="hd-chip__dot"></span>✦ Emotional peak — 1:22:05</span>
+          <span class="hd-chip"><span class="hd-chip__dot"></span>✦ Golden hour moment — 2:18:44</span>
+          <span class="hd-chip"><span class="hd-chip__dot"></span>✦ Quiet scene — 3:01:30</span>
+          <span class="hd-chip"><span class="hd-chip__dot"></span>✦ Story scene — 3:47:22</span>
+        </div>
+      </div>
+
+      <!-- Right: Scanner -->
+      <div class="hd-scanner-side hd-fade hd-d3">
+        <div class="hd-scanner-head">
+          <span style="color:var(--lime);font-size:8px">●</span>
+          Timeline Scanner &nbsp;
+          <span class="hd-mono" style="font-size:11px;color:var(--w40)">14,400 frames</span>
+        </div>
+        <canvas class="hd-scanner-canvas" id="hd-scanner" style="height:130px"></canvas>
+        <div style="display:flex;justify-content:space-between">
+          <span class="hd-small">Scanning footage...</span>
+          <span class="hd-small hd-lime" id="hd-scan-count">— moments found</span>
+        </div>
+        <!-- Emotion label strip -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px">
+          <div class="hd-glass-lime" style="padding:12px;text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--lime)" id="hd-ec1">0</div>
+            <div class="hd-small hd-mt-sm">Emotional<br>Peaks</div>
+          </div>
+          <div class="hd-glass-lime" style="padding:12px;text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--lime)" id="hd-ec2">0</div>
+            <div class="hd-small hd-mt-sm">Story<br>Scenes</div>
+          </div>
+          <div class="hd-glass-lime" style="padding:12px;text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--lime)" id="hd-ec3">0</div>
+            <div class="hd-small hd-mt-sm">Moments<br>Found</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     NARRATIVE 1 — AMARA
+     "The Girl Who Never Saw Herself"
+     ════════════════════════════════════════ -->
+<section id="hd-n1" class="hd-nar">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(200,255,0,.03) 0%,transparent 70%);pointer-events:none"></div>
+
+  <div class="hd-wrap">
+    <div class="hd-nar-grid">
+
+      <!-- Left text -->
+      <div>
+        <div class="hd-nar-tag hd-fade"><span>●</span> Narrative 01</div>
+        <div class="hd-nar-num hd-fade">01</div>
+
+        <div class="hd-persona hd-fade hd-d1">
+          <div class="hd-avatar hd-av1"></div>
+          <div>
+            <div class="hd-pname">Amara</div>
+            <div class="hd-prole">summer_trip.mov · 4h 12m uploaded</div>
+          </div>
+        </div>
+
+        <h3 class="hd-nar-h hd-fade hd-d2">The Girl Who Never<br>Saw Herself</h3>
+
+        <p class="hd-nar-sub hd-fade hd-d3">She travelled with friends for a whole summer. She thought she was barely in any of the footage. She almost didn't upload it.</p>
+
+        <div class="hd-nar-quote hd-fade hd-d3">"I'm barely even in these videos. They're mostly of the places we went to."</div>
+
+        <div class="hd-found-list hd-fade hd-d4">
+          <div class="hd-found-item">23 candid moments surfaced</div>
+          <div class="hd-found-item">8 emotional peaks detected</div>
+          <div class="hd-found-item">4 cinematic story scenes built</div>
+          <div class="hd-found-item">Golden hour sequence discovered</div>
+        </div>
+
+        <div class="hd-reel-out hd-fade hd-d5">
+          <div class="hd-reel-out__lbl">Output Reel</div>
+          <div class="hd-reel-out__t">"The moments they saw in you."</div>
+        </div>
+      </div>
+
+      <!-- Center AI -->
+      <div class="hd-nar-center">
+        <div class="hd-ai-line"></div>
+        <div class="hd-ai-badge">HESSA<br>AI</div>
+        <div class="hd-ai-dots">
+          <div class="hd-ai-dot"></div><div class="hd-ai-dot"></div><div class="hd-ai-dot"></div>
+        </div>
+        <div class="hd-ai-line hd-ai-line-d"></div>
+      </div>
+
+      <!-- Right phones -->
+      <div class="hd-nar-phones hd-scale hd-d2">
+        <div class="hd-phone-duo">
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-raw">
+                  <div class="hd-thumb hd-s1a"><span class="hd-thumb-ts">00:03</span></div>
+                  <div class="hd-thumb hd-s1b"><span class="hd-thumb-ts">00:34</span></div>
+                  <div class="hd-thumb hd-s1c"><span class="hd-thumb-ts">01:12</span></div>
+                  <div class="hd-thumb hd-s1d"><span class="hd-thumb-ts">01:45</span></div>
+                  <div class="hd-thumb hd-s1e"><span class="hd-thumb-ts">02:18</span></div>
+                  <div class="hd-thumb hd-s1f"><span class="hd-thumb-ts">02:52</span></div>
+                  <div class="hd-thumb hd-s1g"><span class="hd-thumb-ts">03:21</span></div>
+                  <div class="hd-thumb hd-s1h"><span class="hd-thumb-ts">04:01</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl">4h 12m raw footage</div>
+          </div>
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-reel">
+                  <div class="hd-scr-scene hd-s1-reel">
+                    <div class="hd-scr-scanline"></div>
+                    <div class="hd-scr-title">"The moments<br>they saw in you."</div>
+                  </div>
+                  <div class="hd-scr-bar">
+                    <svg class="hd-scr-play" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5V3z"/></svg>
+                    <div class="hd-scr-prog"><div class="hd-scr-prog-fill" style="width:62%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl after">23 moments found</div>
+            <!-- Floating cards -->
+            <div class="hd-floater" style="right:-96px;top:38px;--dur:5s;--delay:0s"><span class="hd-floater__ico">✨</span>Candid laugh</div>
+            <div class="hd-floater" style="right:-88px;top:110px;--dur:6s;--delay:1.6s"><span class="hd-floater__ico">💛</span>Emotional peak</div>
+            <div class="hd-floater" style="right:-100px;top:180px;--dur:4.8s;--delay:3.2s"><span class="hd-floater__ico">🎬</span>Golden hour</div>
+          </div>
+
+        </div>
+        <div class="hd-phone-glow"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     NARRATIVE 2 — THE KALANI FAMILY
+     "The Family Memory"
+     ════════════════════════════════════════ -->
+<section id="hd-n2" class="hd-nar hd-nar--alt">
+  <div style="position:absolute;top:50%;left:30%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(ellipse,rgba(200,180,0,.03) 0%,transparent 70%);pointer-events:none"></div>
+
+  <div class="hd-wrap">
+    <div class="hd-nar-grid">
+
+      <!-- Left: phones (reversed) -->
+      <div class="hd-nar-phones hd-scale hd-d2">
+        <div class="hd-phone-duo">
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-raw">
+                  <div class="hd-thumb hd-s2a"><span class="hd-thumb-ts">2019</span></div>
+                  <div class="hd-thumb hd-s2b"><span class="hd-thumb-ts">2020</span></div>
+                  <div class="hd-thumb hd-s2c"><span class="hd-thumb-ts">2021</span></div>
+                  <div class="hd-thumb hd-s2d"><span class="hd-thumb-ts">2021</span></div>
+                  <div class="hd-thumb hd-s2e"><span class="hd-thumb-ts">2022</span></div>
+                  <div class="hd-thumb hd-s2f"><span class="hd-thumb-ts">2023</span></div>
+                  <div class="hd-thumb hd-s2g"><span class="hd-thumb-ts">2023</span></div>
+                  <div class="hd-thumb hd-s2h"><span class="hd-thumb-ts">2024</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl">5 years of footage</div>
+          </div>
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-reel">
+                  <div class="hd-scr-scene hd-s2-reel">
+                    <div class="hd-scr-scanline"></div>
+                    <div class="hd-scr-title">"Moments we<br>forgot we had."</div>
+                  </div>
+                  <div class="hd-scr-bar">
+                    <svg class="hd-scr-play" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5V3z"/></svg>
+                    <div class="hd-scr-prog"><div class="hd-scr-prog-fill" style="width:40%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl after">31 moments found</div>
+            <div class="hd-floater" style="left:-98px;top:44px;--dur:5.5s;--delay:.8s"><span class="hd-floater__ico">👵</span>Grandma's smile</div>
+            <div class="hd-floater" style="left:-90px;top:116px;--dur:4.8s;--delay:2.4s"><span class="hd-floater__ico">🎂</span>Birthday moment</div>
+            <div class="hd-floater" style="left:-98px;top:188px;--dur:6s;--delay:4s"><span class="hd-floater__ico">😂</span>First laugh found</div>
+          </div>
+
+        </div>
+        <div class="hd-phone-glow"></div>
+      </div>
+
+      <!-- Center AI -->
+      <div class="hd-nar-center">
+        <div class="hd-ai-line"></div>
+        <div class="hd-ai-badge">HESSA<br>AI</div>
+        <div class="hd-ai-dots">
+          <div class="hd-ai-dot"></div><div class="hd-ai-dot"></div><div class="hd-ai-dot"></div>
+        </div>
+        <div class="hd-ai-line hd-ai-line-d"></div>
+      </div>
+
+      <!-- Right text -->
+      <div>
+        <div class="hd-nar-tag hd-fade"><span>●</span> Narrative 02</div>
+        <div class="hd-nar-num hd-fade">02</div>
+
+        <div class="hd-persona hd-fade hd-d1">
+          <div class="hd-avatar hd-av2"></div>
+          <div>
+            <div class="hd-pname">The Kalani Family</div>
+            <div class="hd-prole">5 years of family footage uploaded</div>
+          </div>
+        </div>
+
+        <h3 class="hd-nar-h hd-fade hd-d2">The Family<br>Memory</h3>
+
+        <p class="hd-nar-sub hd-fade hd-d3">Five years of birthdays, holidays, and ordinary Tuesdays. Stored but never really watched. Hessa found what they had forgotten.</p>
+
+        <div class="hd-nar-quote hd-fade hd-d3">"We didn't even know grandma was captured in so many moments. We cried watching the reel."</div>
+
+        <div class="hd-found-list hd-fade hd-d4">
+          <div class="hd-found-item">31 emotional moments discovered</div>
+          <div class="hd-found-item">Grandma's reactions surfaced</div>
+          <div class="hd-found-item">Children's first laughs found</div>
+          <div class="hd-found-item">3 complete story arcs built</div>
+        </div>
+
+        <div class="hd-reel-out hd-fade hd-d5">
+          <div class="hd-reel-out__lbl">Output Reel</div>
+          <div class="hd-reel-out__t">"Moments we forgot we had."</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     NARRATIVE 3 — ZARA & THE CREW
+     "The Friends Trip"
+     ════════════════════════════════════════ -->
+<section id="hd-n3" class="hd-nar">
+  <div style="position:absolute;top:50%;right:15%;transform:translateY(-50%);width:450px;height:450px;background:radial-gradient(ellipse,rgba(0,100,200,.035) 0%,transparent 70%);pointer-events:none"></div>
+
+  <div class="hd-wrap">
+    <div class="hd-nar-grid">
+
+      <div>
+        <div class="hd-nar-tag hd-fade"><span>●</span> Narrative 03</div>
+        <div class="hd-nar-num hd-fade">03</div>
+
+        <div class="hd-persona hd-fade hd-d1">
+          <div class="hd-avatar hd-av3"></div>
+          <div>
+            <div class="hd-pname">Zara &amp; The Crew</div>
+            <div class="hd-prole">bali_trip_full.mp4 · 6h 48m uploaded</div>
+          </div>
+        </div>
+
+        <h3 class="hd-nar-h hd-fade hd-d2">The Friends<br>Trip</h3>
+
+        <p class="hd-nar-sub hd-fade hd-d3">Six friends. One island. Hundreds of chaotic clips. Hessa found the real moments through all the noise.</p>
+
+        <div class="hd-nar-quote hd-fade hd-d3">"Everyone filmed everything but nobody edited anything. Hessa turned the chaos into a story."</div>
+
+        <div class="hd-found-list hd-fade hd-d4">
+          <div class="hd-found-item">41 spontaneous moments found</div>
+          <div class="hd-found-item">Group energy sequences detected</div>
+          <div class="hd-found-item">5 inside-moment sequences</div>
+          <div class="hd-found-item">Dance &amp; peak energy ranked</div>
+        </div>
+
+        <div class="hd-reel-out hd-fade hd-d5">
+          <div class="hd-reel-out__lbl">Output Reel</div>
+          <div class="hd-reel-out__t">"The trip that became a memory."</div>
+        </div>
+      </div>
+
+      <div class="hd-nar-center">
+        <div class="hd-ai-line"></div>
+        <div class="hd-ai-badge">HESSA<br>AI</div>
+        <div class="hd-ai-dots">
+          <div class="hd-ai-dot"></div><div class="hd-ai-dot"></div><div class="hd-ai-dot"></div>
+        </div>
+        <div class="hd-ai-line hd-ai-line-d"></div>
+      </div>
+
+      <div class="hd-nar-phones hd-scale hd-d2">
+        <div class="hd-phone-duo">
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-raw">
+                  <div class="hd-thumb hd-s3a"><span class="hd-thumb-ts">00:12</span></div>
+                  <div class="hd-thumb hd-s3b"><span class="hd-thumb-ts">00:44</span></div>
+                  <div class="hd-thumb hd-s3c"><span class="hd-thumb-ts">01:22</span></div>
+                  <div class="hd-thumb hd-s3d"><span class="hd-thumb-ts">02:08</span></div>
+                  <div class="hd-thumb hd-s3e"><span class="hd-thumb-ts">03:15</span></div>
+                  <div class="hd-thumb hd-s3f"><span class="hd-thumb-ts">04:02</span></div>
+                  <div class="hd-thumb hd-s3g"><span class="hd-thumb-ts">05:30</span></div>
+                  <div class="hd-thumb hd-s3h"><span class="hd-thumb-ts">06:48</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl">6h 48m raw footage</div>
+          </div>
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-reel">
+                  <div class="hd-scr-scene hd-s3-reel">
+                    <div class="hd-scr-scanline"></div>
+                    <div class="hd-scr-title">"The trip that<br>became a memory."</div>
+                  </div>
+                  <div class="hd-scr-bar">
+                    <svg class="hd-scr-play" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5V3z"/></svg>
+                    <div class="hd-scr-prog"><div class="hd-scr-prog-fill" style="width:48%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl after">41 moments found</div>
+            <div class="hd-floater" style="right:-94px;top:32px;--dur:4.5s;--delay:.4s"><span class="hd-floater__ico">😂</span>Group laugh peak</div>
+            <div class="hd-floater" style="right:-88px;top:104px;--dur:5.5s;--delay:2s"><span class="hd-floater__ico">💃</span>Dance moment</div>
+            <div class="hd-floater" style="right:-94px;top:176px;--dur:5s;--delay:3.6s"><span class="hd-floater__ico">🌊</span>Candid swim</div>
+          </div>
+        </div>
+        <div class="hd-phone-glow"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     NARRATIVE 4 — ELIAS & NOA
+     "The Love Story"
+     ════════════════════════════════════════ -->
+<section id="hd-n4" class="hd-nar hd-nar--alt">
+  <div class="hd-wrap">
+    <div class="hd-nar-grid">
+
+      <div class="hd-nar-phones hd-scale hd-d2">
+        <div class="hd-phone-duo">
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone" style="filter:saturate(.55)">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-raw">
+                  <div class="hd-thumb hd-s4a"><span class="hd-thumb-ts">Yr 1</span></div>
+                  <div class="hd-thumb hd-s4b"><span class="hd-thumb-ts">Yr 1</span></div>
+                  <div class="hd-thumb hd-s4c"><span class="hd-thumb-ts">Yr 2</span></div>
+                  <div class="hd-thumb hd-s4d"><span class="hd-thumb-ts">Yr 2</span></div>
+                  <div class="hd-thumb hd-s4e"><span class="hd-thumb-ts">Yr 3</span></div>
+                  <div class="hd-thumb hd-s4f"><span class="hd-thumb-ts">Yr 3</span></div>
+                  <div class="hd-thumb hd-s4g"><span class="hd-thumb-ts">Yr 4</span></div>
+                  <div class="hd-thumb hd-s4h"><span class="hd-thumb-ts">Yr 4</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl">4 years of footage</div>
+          </div>
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone" style="filter:saturate(.5)">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-reel">
+                  <div class="hd-scr-scene hd-s4-reel">
+                    <div class="hd-scr-scanline"></div>
+                    <div class="hd-scr-title">"Every small moment<br>between you."</div>
+                  </div>
+                  <div class="hd-scr-bar">
+                    <svg class="hd-scr-play" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5V3z"/></svg>
+                    <div class="hd-scr-prog"><div class="hd-scr-prog-fill" style="width:57%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl after">17 moments found</div>
+            <div class="hd-floater" style="left:-90px;top:44px;--dur:5.2s;--delay:1s"><span class="hd-floater__ico">👀</span>A glance found</div>
+            <div class="hd-floater" style="left:-86px;top:116px;--dur:6.2s;--delay:2.6s"><span class="hd-floater__ico">🤍</span>Quiet smile</div>
+            <div class="hd-floater" style="left:-92px;top:188px;--dur:4.8s;--delay:4.1s"><span class="hd-floater__ico">🌧</span>Rainy window</div>
+          </div>
+        </div>
+        <div class="hd-phone-glow"></div>
+      </div>
+
+      <div class="hd-nar-center">
+        <div class="hd-ai-line"></div>
+        <div class="hd-ai-badge">HESSA<br>AI</div>
+        <div class="hd-ai-dots">
+          <div class="hd-ai-dot"></div><div class="hd-ai-dot"></div><div class="hd-ai-dot"></div>
+        </div>
+        <div class="hd-ai-line hd-ai-line-d"></div>
+      </div>
+
+      <div>
+        <div class="hd-nar-tag hd-fade"><span>●</span> Narrative 04</div>
+        <div class="hd-nar-num hd-fade">04</div>
+
+        <div class="hd-persona hd-fade hd-d1">
+          <div class="hd-avatar hd-av4"></div>
+          <div>
+            <div class="hd-pname">Elias &amp; Noa</div>
+            <div class="hd-prole">4 years of shared footage uploaded</div>
+          </div>
+        </div>
+
+        <h3 class="hd-nar-h hd-fade hd-d2">The Love<br>Story</h3>
+
+        <p class="hd-nar-sub hd-fade hd-d3">Four years of ordinary life together. Hessa found the glances, the quiet smiles, the tiny moments that words can't describe.</p>
+
+        <div class="hd-nar-quote hd-fade hd-d3">"We didn't know we were capturing those moments. We thought we were just filming random things."</div>
+
+        <div class="hd-found-list hd-fade hd-d4">
+          <div class="hd-found-item">17 intimate moments discovered</div>
+          <div class="hd-found-item">Meaningful glances surfaced</div>
+          <div class="hd-found-item">Quiet exchanges found</div>
+          <div class="hd-found-item">4-year emotional arc built</div>
+        </div>
+
+        <div class="hd-reel-out hd-fade hd-d5">
+          <div class="hd-reel-out__lbl">Output Reel</div>
+          <div class="hd-reel-out__t">"Every small moment between you."</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     NARRATIVE 5 — KAEL
+     "The Creator Story"
+     ════════════════════════════════════════ -->
+<section id="hd-n5" class="hd-nar">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(200,255,0,.04) 0%,transparent 70%);pointer-events:none"></div>
+
+  <div class="hd-wrap">
+    <div class="hd-nar-grid">
+
+      <div>
+        <div class="hd-nar-tag hd-fade"><span>●</span> Narrative 05</div>
+        <div class="hd-nar-num hd-fade">05</div>
+
+        <div class="hd-persona hd-fade hd-d1">
+          <div class="hd-avatar hd-av5"></div>
+          <div>
+            <div class="hd-pname">Kael</div>
+            <div class="hd-prole">230 raw creator clips · 14h+ uploaded</div>
+          </div>
+        </div>
+
+        <h3 class="hd-nar-h hd-fade hd-d2">The Creator<br>Story</h3>
+
+        <p class="hd-nar-sub hd-fade hd-d3">230 raw clips. Months of unedited content sitting on a hard drive. Hessa ranked every emotional hook, every cinematic moment — automatically.</p>
+
+        <div class="hd-nar-quote hd-fade hd-d3">"I had hundreds of clips I never used. Hessa found 12 reels worth of content I didn't know I had."</div>
+
+        <div class="hd-found-list hd-fade hd-d4">
+          <div class="hd-found-item">87 ranked emotional moments</div>
+          <div class="hd-found-item">12 hook sequences identified</div>
+          <div class="hd-found-item">Cinematic scene clusters built</div>
+          <div class="hd-found-item">Story arcs auto-sequenced</div>
+        </div>
+
+        <div class="hd-reel-out hd-fade hd-d5">
+          <div class="hd-reel-out__lbl">Output Reel</div>
+          <div class="hd-reel-out__t">"Stories from what already existed."</div>
+        </div>
+      </div>
+
+      <div class="hd-nar-center">
+        <div class="hd-ai-line"></div>
+        <div class="hd-ai-badge">HESSA<br>AI</div>
+        <div class="hd-ai-dots">
+          <div class="hd-ai-dot"></div><div class="hd-ai-dot"></div><div class="hd-ai-dot"></div>
+        </div>
+        <div class="hd-ai-line hd-ai-line-d"></div>
+      </div>
+
+      <div class="hd-nar-phones hd-scale hd-d2">
+        <div class="hd-phone-duo">
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-raw">
+                  <div class="hd-thumb hd-s5a"><span class="hd-thumb-ts">Clip 003</span></div>
+                  <div class="hd-thumb hd-s5b"><span class="hd-thumb-ts">Clip 047</span></div>
+                  <div class="hd-thumb hd-s5c"><span class="hd-thumb-ts">Clip 089</span></div>
+                  <div class="hd-thumb hd-s5d"><span class="hd-thumb-ts">Clip 112</span></div>
+                  <div class="hd-thumb hd-s5e"><span class="hd-thumb-ts">Clip 145</span></div>
+                  <div class="hd-thumb hd-s5f"><span class="hd-thumb-ts">Clip 178</span></div>
+                  <div class="hd-thumb hd-s5g"><span class="hd-thumb-ts">Clip 201</span></div>
+                  <div class="hd-thumb hd-s5h"><span class="hd-thumb-ts">Clip 230</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl">230 raw clips</div>
+          </div>
+
+          <div style="position:relative;margin-bottom:32px">
+            <div class="hd-phone">
+              <div class="hd-phone-screen">
+                <div class="hd-scr-reel">
+                  <div class="hd-scr-scene hd-s5-reel">
+                    <div class="hd-scr-scanline"></div>
+                    <div class="hd-scr-title">"Stories from what<br>already existed."</div>
+                  </div>
+                  <div class="hd-scr-bar">
+                    <svg class="hd-scr-play" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5V3z"/></svg>
+                    <div class="hd-scr-prog"><div class="hd-scr-prog-fill" style="width:72%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hd-phone-lbl after">87 moments found</div>
+            <div class="hd-floater" style="right:-92px;top:28px;--dur:4.5s;--delay:.2s"><span class="hd-floater__ico">🎯</span>Viral hook #7</div>
+            <div class="hd-floater" style="right:-86px;top:100px;--dur:5.5s;--delay:1.8s"><span class="hd-floater__ico">⚡</span>Peak moment</div>
+            <div class="hd-floater" style="right:-96px;top:172px;--dur:5s;--delay:3.4s"><span class="hd-floater__ico">📽</span>Cinematic scene</div>
+          </div>
+        </div>
+        <div class="hd-phone-glow"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 8 — AI BRAIN / EMOTIONAL INTELLIGENCE
+     ════════════════════════════════════════ -->
+<section id="hd-brain" class="hd-sec hd-sec--void">
+  <div class="hd-wrap">
+
+    <div class="hd-center hd-mb-lg">
+      <div class="hd-eyebrow hd-fade hd-mx-auto">Under The Hood</div>
+      <h2 class="hd-h2 hd-fade hd-d1">The Emotional<br>Intelligence.</h2>
+      <p class="hd-body hd-fade hd-d2 hd-max-560 hd-mx-auto hd-mt-sm">
+        Hessa maps every second of your footage to an emotional intensity score — then surfaces only what matters, in the right order.
+      </p>
+    </div>
+
+    <!-- Brain canvas -->
+    <div class="hd-brain-box hd-fade hd-d3">
+      <div class="hd-brain-top">
+        <div style="width:8px;height:8px;background:var(--lime);border-radius:50%;animation:hd-blink 1.5s infinite;flex-shrink:0"></div>
+        <div class="hd-brain-top-t">Emotional Intensity Timeline — summer_trip.mov</div>
+        <div class="hd-brain-top-s">4h 12m · 14,400 frames analysed</div>
+      </div>
+      <canvas class="hd-brain-canvas" id="hd-brain-cvs" style="height:300px"></canvas>
+      <div class="hd-brain-legend">
+        <div class="hd-leg-item"><div class="hd-leg-dot hd-leg-lime"></div>Detected meaningful moments</div>
+        <div class="hd-leg-item"><div class="hd-leg-dot hd-leg-w"></div>Emotional intensity curve</div>
+        <div class="hd-leg-item"><div class="hd-leg-dot hd-leg-dim"></div>Background activity</div>
+      </div>
+    </div>
+
+    <!-- Scene cluster -->
+    <div class="hd-center hd-mt-lg">
+      <div class="hd-eyebrow hd-fade hd-mx-auto">Scene Clusters</div>
+      <p class="hd-small hd-max-560 hd-mx-auto hd-fade hd-d1">
+        Hessa groups similar moments into emotional scene clusters — then sequences them into your story automatically.
+      </p>
+    </div>
+
+    <div class="hd-cluster-grid hd-mt-lg">
+      <div class="hd-ccard hd-fade hd-d1"><div class="hd-ccard__vis hd-s1a"></div><div class="hd-ccard__lbl">Sunset</div><div class="hd-ccard__score">9.2</div></div>
+      <div class="hd-ccard hd-fade hd-d2"><div class="hd-ccard__vis hd-s2b"></div><div class="hd-ccard__lbl">Warmth</div><div class="hd-ccard__score">8.7</div></div>
+      <div class="hd-ccard hd-fade hd-d3"><div class="hd-ccard__vis hd-s3a"></div><div class="hd-ccard__lbl">Energy</div><div class="hd-ccard__score">8.1</div></div>
+      <div class="hd-ccard hd-fade hd-d4"><div class="hd-ccard__vis hd-s4b"></div><div class="hd-ccard__lbl">Intimacy</div><div class="hd-ccard__score">9.5</div></div>
+      <div class="hd-ccard hd-fade hd-d5"><div class="hd-ccard__vis hd-s5e"></div><div class="hd-ccard__lbl">Story Arc</div><div class="hd-ccard__score">8.9</div></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 9 — REEL CINEMA
+     ════════════════════════════════════════ -->
+<section id="hd-reel" class="hd-sec">
+  <div class="hd-wrap">
+
+    <div class="hd-center hd-mb-lg">
+      <div class="hd-eyebrow hd-fade hd-mx-auto">Output</div>
+      <h2 class="hd-h2 hd-fade hd-d1">Your Story,<br>Rendered.</h2>
+      <p class="hd-body hd-fade hd-d2 hd-max-560 hd-mx-auto hd-mt-sm">
+        Five different stories. Five different reels. Each one found from footage that already existed — and was waiting to be seen.
+      </p>
+    </div>
+
+    <div class="hd-reel-showcase">
+
+      <!-- Hero reel: N1 -->
+      <div class="hd-ri hd-ri--hero hd-scale">
+        <div class="hd-ri__vis">
+          <div style="width:100%;height:100%;background:linear-gradient(160deg,#8B4513 0%,#D2691E 30%,#FFD700 65%,#FF7F00 85%,#4a1a00 100%)"></div>
+          <div class="hd-ri__over">
+            <div class="hd-ri__tag">✦ Narrative 01</div>
+            <div class="hd-ri__title">"The moments they saw in you."</div>
+            <div class="hd-ri__meta">
+              <span>Amara</span><span class="hd-ri__dot"></span>
+              <span>23 moments</span><span class="hd-ri__dot"></span><span>2:34</span>
+            </div>
+          </div>
+          <div class="hd-play"><svg width="16" height="16" viewBox="0 0 16 16" fill="#C8FF00"><path d="M5 3l8 5-8 5V3z"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Reel 2 -->
+      <div class="hd-ri hd-fade hd-d1">
+        <div class="hd-ri__vis">
+          <div style="width:100%;height:100%;background:linear-gradient(150deg,#8B6914,#D2A679,#F0C040)"></div>
+          <div class="hd-ri__over">
+            <div class="hd-ri__tag">✦ Narrative 02</div>
+            <div class="hd-ri__title">"Moments we forgot we had."</div>
+            <div class="hd-ri__meta"><span>The Kalani Family</span><span class="hd-ri__dot"></span><span>31 moments</span></div>
+          </div>
+          <div class="hd-play"><svg width="16" height="16" viewBox="0 0 16 16" fill="#C8FF00"><path d="M5 3l8 5-8 5V3z"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Reel 3 -->
+      <div class="hd-ri hd-fade hd-d2">
+        <div class="hd-ri__vis">
+          <div style="width:100%;height:100%;background:linear-gradient(150deg,#003366,#0066CC,#00AAFF)"></div>
+          <div class="hd-ri__over">
+            <div class="hd-ri__tag">✦ Narrative 03</div>
+            <div class="hd-ri__title">"The trip that became a memory."</div>
+            <div class="hd-ri__meta"><span>Zara &amp; The Crew</span><span class="hd-ri__dot"></span><span>41 moments</span></div>
+          </div>
+          <div class="hd-play"><svg width="16" height="16" viewBox="0 0 16 16" fill="#C8FF00"><path d="M5 3l8 5-8 5V3z"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Reel 4 -->
+      <div class="hd-ri hd-fade hd-d3">
+        <div class="hd-ri__vis">
+          <div style="width:100%;height:100%;background:linear-gradient(150deg,#1a1a1a,#3d3d3d,#6a6a6a);filter:saturate(.3)"></div>
+          <div class="hd-ri__over">
+            <div class="hd-ri__tag">✦ Narrative 04</div>
+            <div class="hd-ri__title">"Every small moment between you."</div>
+            <div class="hd-ri__meta"><span>Elias &amp; Noa</span><span class="hd-ri__dot"></span><span>17 moments</span></div>
+          </div>
+          <div class="hd-play"><svg width="16" height="16" viewBox="0 0 16 16" fill="#C8FF00"><path d="M5 3l8 5-8 5V3z"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Reel 5 -->
+      <div class="hd-ri hd-fade hd-d4">
+        <div class="hd-ri__vis">
+          <div style="width:100%;height:100%;background:linear-gradient(150deg,#000,#0a0a0a,#1a1a1a,#C8FF00)"></div>
+          <div class="hd-ri__over">
+            <div class="hd-ri__tag">✦ Narrative 05</div>
+            <div class="hd-ri__title">"Stories from what already existed."</div>
+            <div class="hd-ri__meta"><span>Kael</span><span class="hd-ri__dot"></span><span>87 moments</span></div>
+          </div>
+          <div class="hd-play"><svg width="16" height="16" viewBox="0 0 16 16" fill="#C8FF00"><path d="M5 3l8 5-8 5V3z"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="hd-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 10 — BRIDGE CTA
+     ════════════════════════════════════════ -->
+<section id="hd-bridge" class="hd-sec hd-sec--void">
+  <div class="hd-bridge-glow"></div>
+  <div class="hd-wrap hd-center">
+
+    <div class="hd-eyebrow hd-fade hd-mx-auto">Early Access</div>
+    <h2 class="hd-mega hd-fade hd-d1">
+      Your footage is<br>already <em>waiting.</em>
+    </h2>
+    <p class="hd-body hd-fade hd-d2 hd-max-560 hd-mx-auto hd-mt-sm">
+      The moments that matter most are already inside your videos. Hessa finds them for you — beautifully, privately, automatically.
+    </p>
+
+    <div id="hd-form-area" class="hd-fade hd-d3" style="margin-top:40px">
+      <form id="hd-form" class="hd-form" novalidate aria-label="Join the Hessa AI waitlist" style="width:100%;max-width:480px;margin:0 auto">
+        <div class="hd-form__wrap">
+          <label for="hd-email" class="hd-sr-only">Email address</label>
+          <input type="email" id="hd-email" name="email" class="hd-form__input"
+            placeholder="your@email.com" autocomplete="email" required maxlength="254">
+          <button type="submit" id="hd-form-submit" class="hd-form__submit">
+            <span class="hd-form__submit-text">Get Early Access</span>
+            <svg class="hd-form__submit-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7h8M11 7L8.5 4.5M11 7L8.5 9.5" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="hd-form__submit-loader" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div id="hd-form-msg" class="hd-form__msg" role="alert" aria-live="polite"></div>
+        <p class="hd-form__note">No spam. No commitments. Just early access.</p>
+      </form>
+    </div>
+    <div class="hd-btn-row hd-fade hd-d4">
+      <a href="#how" class="hd-btn-ghost">See How It Works</a>
+    </div>
+
+    <div class="hd-trust-row hd-fade hd-d4">
+      <div class="hd-trust-item"><span class="hd-trust-ico">✓</span> Videos you own only</div>
+      <div class="hd-trust-item"><span class="hd-trust-ico">✓</span> No face data stored</div>
+      <div class="hd-trust-item"><span class="hd-trust-ico">✓</span> Auto-deleted after processing</div>
+      <div class="hd-trust-item"><span class="hd-trust-ico">✓</span> You stay in control</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT — All scoped in IIFE
+     ════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ─── SCROLL REVEAL ────────────────────────────────────────── */
+  var revObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('on'); }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -28px 0px' });
+
+  document.querySelectorAll('.hd-fade,.hd-fade-up,.hd-scale').forEach(function (el) {
+    revObs.observe(el);
+  });
+
+  /* ─── COUNTER ANIMATION ────────────────────────────────────── */
+  function runCounter(el) {
+    var tgt = parseInt(el.dataset.target) || 0;
+    var suf = el.dataset.suffix || '';
+    var dur = 1900;
+    var s   = performance.now();
+    (function tick(now) {
+      var p = Math.min((now - s) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 4); // ease-out-quart
+      el.textContent = Math.round(e * tgt) + suf;
+      if (p < 1) requestAnimationFrame(tick);
+    })(s);
+  }
+  var cObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !e.target.dataset.done) {
+        e.target.dataset.done = '1';
+        runCounter(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.hd-counter').forEach(function (el) { cObs.observe(el); });
+
+  /* ─── UPLOAD SIMULATION ────────────────────────────────────── */
+  var drop    = document.getElementById('hd-drop');
+  var dropBtn = document.getElementById('hd-drop-btn');
+  var panel   = document.getElementById('hd-prog-panel');
+  var fill    = document.getElementById('hd-prog-fill');
+  var pct     = document.getElementById('hd-prog-pct');
+  var status  = document.getElementById('hd-prog-status');
+  var chips   = document.querySelectorAll('.hd-chip');
+  var ec1     = document.getElementById('hd-ec1');
+  var ec2     = document.getElementById('hd-ec2');
+  var ec3     = document.getElementById('hd-ec3');
+  var scanCount = document.getElementById('hd-scan-count');
+  var busy    = false;
+  var uTimer  = null;
+
+  var stages = [
+    { at: 0,  msg: 'Uploading footage...'              },
+    { at: 20, msg: 'Analysing 14,400 frames...'        },
+    { at: 42, msg: 'Detecting meaningful moments...'   },
+    { at: 64, msg: 'Ranking emotional intensity...'    },
+    { at: 82, msg: 'Building story sequence...'        },
+    { at: 96, msg: 'Generating your reel...'           }
+  ];
+
+  function startUpload() {
+    if (busy) return;
+    busy = true;
+    if (drop)  drop.classList.add('active');
+    if (panel) panel.classList.add('show');
+    chips.forEach(function (c) { c.classList.remove('pop'); });
+
+    var v = 0;
+
+    function tick() {
+      v = Math.min(v + Math.random() * 2.4 + 0.4, 100);
+      if (fill)   fill.style.width = v + '%';
+      if (pct)    pct.textContent  = Math.floor(v) + '%';
+      // Update counter boxes
+      var epks = Math.round(v / 100 * 8);
+      var scns = Math.round(v / 100 * 4);
+      var mom  = Math.round(v / 100 * 23);
+      if (ec1) ec1.textContent = epks;
+      if (ec2) ec2.textContent = scns;
+      if (ec3) ec3.textContent = mom;
+      if (scanCount) scanCount.textContent = mom + ' moments found';
+
+      for (var i = stages.length - 1; i >= 0; i--) {
+        if (v >= stages[i].at) { if (status) status.textContent = stages[i].msg; break; }
+      }
+
+      if (v < 100) {
+        uTimer = setTimeout(tick, 55);
+      } else {
+        if (fill)   fill.style.width = '100%';
+        if (pct)    pct.textContent  = '100%';
+        if (status) status.textContent = '✦ Reel ready — 23 moments found';
+        chips.forEach(function (c, i) {
+          setTimeout(function () { c.classList.add('pop'); }, i * 330 + 300);
+        });
+        uTimer = setTimeout(function () { resetUpload(); }, 9000);
+      }
+    }
+    tick();
+  }
+
+  function resetUpload() {
+    busy = false;
+    if (fill)   fill.style.width = '0%';
+    if (pct)    pct.textContent  = '0%';
+    if (status) status.textContent = 'Preparing...';
+    if (drop)   drop.classList.remove('active');
+    if (panel)  panel.classList.remove('show');
+    if (ec1) ec1.textContent = '0';
+    if (ec2) ec2.textContent = '0';
+    if (ec3) ec3.textContent = '0';
+    if (scanCount) scanCount.textContent = '— moments found';
+    chips.forEach(function (c) { c.classList.remove('pop'); });
+  }
+
+  if (drop)    drop.addEventListener('click',    startUpload);
+  if (dropBtn) dropBtn.addEventListener('click', function (e) { e.stopPropagation(); startUpload(); });
+
+  /* ─── SCANNER CANVAS ───────────────────────────────────────── */
+  var scanRaf = null;
+
+  function initScanner() {
+    var cvs = document.getElementById('hd-scanner');
+    if (!cvs) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W   = cvs.parentElement ? cvs.parentElement.offsetWidth : 500;
+    W = W || 500;
+    cvs.width  = Math.round(W * dpr);
+    cvs.height = Math.round(130 * dpr);
+    cvs.style.width  = W + 'px';
+    cvs.style.height = '130px';
+    var ctx = cvs.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var N  = 30;
+    var FY = 30;
+    var FH = 62;
+    var FW = (W - (N - 1) * 2) / N;
+
+    var cols = [
+      '#1a120a','#3d1c02','#8B4513','#D2691E','#FF7F00',
+      '#1a3a5c','#2e7bc4','#7bbce0','#2d4a2d','#4a7c59',
+      '#d44000','#ff7834','#1a1a2e','#0f3460','#c9a86c',
+      '#2c3e50','#4a6fa5','#3d1c02','#7b3f00','#c67c52',
+      '#1a120a','#3d1c02','#8B4513','#D2691E','#FF7F00',
+      '#1a3a5c','#2e7bc4','#7bbce0','#2d4a2d','#4a7c59'
+    ];
+    var moments = [3, 8, 14, 22, 27];
+    var scanX = -4;
+    var running = false;
+
+    function draw() {
+      ctx.clearRect(0, 0, W, 130);
+      ctx.fillStyle = '#040407';
+      ctx.fillRect(0, 0, W, 130);
+
+      // Ruler
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(0, FY - 6); ctx.lineTo(W, FY - 6); ctx.stroke();
+
+      // Time labels
+      ctx.fillStyle = 'rgba(255,255,255,0.28)';
+      ctx.font = '8px SF Mono,monospace';
+      ctx.textAlign = 'center';
+      ['0h','1h','2h','3h','4h'].forEach(function (l, i) {
+        var x = i * (W / 4);
+        ctx.fillText(l, x, FY - 12);
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(x, FY); ctx.lineTo(x, FY + FH); ctx.stroke();
+      });
+
+      // Frames
+      for (var i = 0; i < N; i++) {
+        var x      = i * (FW + 2);
+        var scanned = x < scanX;
+        var isMom  = moments.indexOf(i) !== -1;
+
+        if (scanned && isMom) {
+          ctx.fillStyle = 'rgba(200,255,0,0.22)';
+          ctx.fillRect(x, FY, FW, FH);
+          ctx.strokeStyle = '#C8FF00';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x + 0.5, FY + 0.5, FW - 1, FH - 1);
+        } else {
+          ctx.fillStyle = scanned ? cols[i % cols.length] : 'rgba(255,255,255,0.03)';
+          ctx.fillRect(x, FY, FW, FH);
+          if (!scanned) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(x + 0.5, FY + 0.5, FW - 1, FH - 1);
+          }
+        }
+
+        // Peak dot above
+        if (scanned && isMom) {
+          ctx.fillStyle = '#C8FF00';
+          ctx.shadowColor = '#C8FF00'; ctx.shadowBlur = 10;
+          ctx.beginPath(); ctx.arc(x + FW / 2, FY - 3, 3, 0, Math.PI * 2); ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = 'rgba(200,255,0,0.3)';
+          ctx.lineWidth = 0.5;
+          ctx.setLineDash([2, 2]);
+          ctx.beginPath(); ctx.moveTo(x + FW / 2, FY); ctx.lineTo(x + FW / 2, FY + FH); ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+
+      // Scan line glow
+      if (scanX > 0 && scanX < W) {
+        var g = ctx.createLinearGradient(scanX - 24, 0, scanX + 24, 0);
+        g.addColorStop(0, 'transparent');
+        g.addColorStop(0.5, 'rgba(200,255,0,0.07)');
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.fillRect(scanX - 24, FY, 48, FH);
+        // Line
+        ctx.strokeStyle = '#C8FF00';
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = '#C8FF00'; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.moveTo(scanX, FY - 5); ctx.lineTo(scanX, FY + FH + 5); ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      // Advance
+      scanX += 1.8;
+      if (scanX > W + 20) scanX = -4;
+
+      scanRaf = requestAnimationFrame(draw);
+    }
+
+    var scanObs = new IntersectionObserver(function (e) {
+      if (e[0].isIntersecting) {
+        if (!running) { running = true; draw(); }
+      } else {
+        running = false;
+        if (scanRaf) cancelAnimationFrame(scanRaf);
+      }
+    });
+    scanObs.observe(cvs);
+  }
+
+  /* ─── BRAIN / EMOTION GRAPH CANVAS ────────────────────────── */
+  var brainRaf = null;
+  var brainStarted = false;
+
+  function initBrain() {
+    var cvs = document.getElementById('hd-brain-cvs');
+    if (!cvs) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W   = cvs.parentElement ? cvs.parentElement.offsetWidth : 900;
+    W = W || 900;
+    cvs.width  = Math.round(W * dpr);
+    cvs.height = Math.round(300 * dpr);
+    cvs.style.width  = W + 'px';
+    cvs.style.height = '300px';
+    var ctx = cvs.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var H   = 300;
+    var PL  = 52; var PR = 20; var PT = 28; var PB = 48;
+    var GW  = W - PL - PR;
+    var GH  = H - PT - PB;
+
+    // Emotion curve — simulated intensity data
+    var rawPts = [
+      0.04,0.07,0.11,0.26,0.16,0.23,0.30,0.20,
+      0.58,0.52,0.38,0.46,0.33,0.40,0.87,0.72,
+      0.63,0.56,0.42,0.50,0.76,0.68,0.60,0.46,
+      0.33,0.40,0.28,0.62,0.53,0.46,0.36,0.41
+    ];
+    var peaks = [8, 14, 20, 27];
+
+    var progress = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#040407';
+      ctx.fillRect(0, 0, W, H);
+
+      // Grid
+      for (var r = 0; r <= 4; r++) {
+        var gy = PT + (GH / 4) * r;
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(PL, gy); ctx.lineTo(W - PR, gy); ctx.stroke();
+        var lbl = ['High','','Med','','Low'][r];
+        if (lbl) {
+          ctx.fillStyle = 'rgba(255,255,255,0.22)';
+          ctx.font = '10px SF Mono,monospace'; ctx.textAlign = 'right';
+          ctx.fillText(lbl, PL - 6, gy + 4);
+        }
+      }
+
+      // X labels + vertical guides
+      ['0:00','1:00','2:00','3:00','4:00'].forEach(function (lbl, i) {
+        var gx = PL + (GW / 4) * i;
+        ctx.fillStyle = 'rgba(255,255,255,0.24)';
+        ctx.font = '10px SF Mono,monospace'; ctx.textAlign = 'center';
+        ctx.fillText(lbl, gx, H - 12);
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(gx, PT); ctx.lineTo(gx, H - PB); ctx.stroke();
+      });
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(PL, H - PB); ctx.lineTo(W - PR, H - PB); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(PL, PT);     ctx.lineTo(PL, H - PB);     ctx.stroke();
+
+      // Points
+      var pts = rawPts.map(function (v, i) {
+        return {
+          x: PL + (i / (rawPts.length - 1)) * GW,
+          y: PT + (1 - v) * GH
+        };
+      });
+
+      var show = Math.max(2, Math.floor(progress * pts.length));
+      var vp   = pts.slice(0, show);
+
+      // Fill under curve
+      var grad = ctx.createLinearGradient(0, PT, 0, H - PB);
+      grad.addColorStop(0,   'rgba(200,255,0,0.14)');
+      grad.addColorStop(0.6, 'rgba(200,255,0,0.04)');
+      grad.addColorStop(1,   'rgba(200,255,0,0)');
+
+      ctx.beginPath();
+      ctx.moveTo(vp[0].x, H - PB);
+      ctx.lineTo(vp[0].x, vp[0].y);
+      for (var i = 1; i < vp.length; i++) {
+        var cpx = (vp[i-1].x + vp[i].x) / 2;
+        ctx.bezierCurveTo(cpx, vp[i-1].y, cpx, vp[i].y, vp[i].x, vp[i].y);
+      }
+      ctx.lineTo(vp[vp.length-1].x, H - PB);
+      ctx.closePath();
+      ctx.fillStyle = grad; ctx.fill();
+
+      // Curve stroke
+      ctx.beginPath();
+      ctx.moveTo(vp[0].x, vp[0].y);
+      for (var i = 1; i < vp.length; i++) {
+        var cpx2 = (vp[i-1].x + vp[i].x) / 2;
+        ctx.bezierCurveTo(cpx2, vp[i-1].y, cpx2, vp[i].y, vp[i].x, vp[i].y);
+      }
+      ctx.strokeStyle = 'rgba(200,255,0,0.85)';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = '#C8FF00'; ctx.shadowBlur = 7;
+      ctx.stroke(); ctx.shadowBlur = 0;
+
+      // Peak markers
+      peaks.forEach(function (pi) {
+        if (pi >= show) return;
+        var pt = pts[pi];
+
+        // Dashed drop line
+        ctx.strokeStyle = 'rgba(200,255,0,0.28)'; ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(pt.x, pt.y); ctx.lineTo(pt.x, H - PB); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Dot
+        ctx.fillStyle = '#C8FF00';
+        ctx.shadowColor = '#C8FF00'; ctx.shadowBlur = 14;
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Diamond label
+        ctx.fillStyle = '#C8FF00';
+        ctx.font = '10px SF Mono,monospace'; ctx.textAlign = 'center';
+        ctx.fillText('◆', pt.x, pt.y - 14);
+      });
+
+      // Cursor dot at end of drawn curve
+      if (progress < 1) {
+        var last = vp[vp.length - 1];
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.shadowColor = '#fff'; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.arc(last.x, last.y, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      if (progress < 1) {
+        progress += 0.005;
+        brainRaf = requestAnimationFrame(draw);
+      }
+    }
+
+    var brainObs = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && !brainStarted) {
+        brainStarted = true;
+        draw();
+      }
+    }, { threshold: 0.2 });
+    brainObs.observe(cvs);
+  }
+
+  /* ─── PARTICLE BACKGROUND ──────────────────────────────────── */
+  function initParticles() {
+    var cvs = document.getElementById('hd-particle-cvs');
+    if (!cvs) return;
+    var parent = cvs.parentElement;
+    if (!parent) return;
+
+    var W, H, nodes, edges;
+    var raf;
+
+    function resize() {
+      W = parent.offsetWidth;
+      H = parent.offsetHeight;
+      cvs.width  = W;
+      cvs.height = H;
+      buildNodes();
+    }
+
+    function buildNodes() {
+      var N = Math.min(Math.floor(W / 60), 18);
+      nodes = [];
+      edges = [];
+      for (var i = 0; i < N; i++) {
+        nodes.push({
+          x:  Math.random() * W,
+          y:  Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r:  Math.random() * 2 + 1
+        });
+      }
+      // Connect nearby nodes
+      for (var a = 0; a < nodes.length; a++) {
+        for (var b = a + 1; b < nodes.length; b++) {
+          edges.push([a, b]);
+        }
+      }
+    }
+
+    var ctx = cvs.getContext('2d');
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Update positions
+      nodes.forEach(function (n) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      });
+
+      // Draw edges
+      edges.forEach(function (e) {
+        var a = nodes[e[0]]; var b = nodes[e[1]];
+        var d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d > 180) return;
+        var alpha = (1 - d / 180) * 0.18;
+        ctx.strokeStyle = 'rgba(200,255,0,' + alpha + ')';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      });
+
+      // Draw nodes
+      nodes.forEach(function (n) {
+        ctx.fillStyle = 'rgba(200,255,0,0.3)';
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+      });
+
+      raf = requestAnimationFrame(draw);
+    }
+
+    var pObs = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        draw();
+      } else {
+        if (raf) cancelAnimationFrame(raf);
+      }
+    });
+    pObs.observe(cvs);
+
+    resize();
+    window.addEventListener('resize', function () {
+      clearTimeout(window._hdResizeTimer);
+      window._hdResizeTimer = setTimeout(resize, 200);
+    });
+  }
+
+  /* ─── INIT ─────────────────────────────────────────────────── */
+  function init() {
+    initScanner();
+    initBrain();
+    initParticles();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+</div>
+<!-- ══════════════════════════════════════════════════════════════════
+     HESSA AI CINEMATIC DEMO MODULE — END
+     ═══════════════════════════════════════════════════════════════ -->
+
+</body>
+</html>
